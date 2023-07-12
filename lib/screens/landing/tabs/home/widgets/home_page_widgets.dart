@@ -91,7 +91,7 @@ Widget buildCircularProgressWaterInTake() {
       }
 
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Text("0/0");
+        return loadingfourRotatingDots;
       }
 
       return Column(
@@ -427,7 +427,7 @@ Widget buildTimelineTracker({Widget? streamBuilder}) {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading");
+            return loadingprogressiveDots;
           }
 
           return Column(

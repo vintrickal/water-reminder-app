@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:water_reminder_app/common/values/colors.dart';
 
 Widget reusableText({
@@ -33,3 +34,25 @@ Widget sizedBox30() {
     height: 30.h,
   );
 }
+
+var fourRotatingDots = LoadingAnimationWidget.fourRotatingDots(
+    color: AppColors.primaryElement, size: 50);
+
+var progressiveDots = LoadingAnimationWidget.prograssiveDots(
+    color: AppColors.primaryElement, size: 50);
+
+var loadingfourRotatingDots = Container(
+  padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
+  child: Align(
+    alignment: Alignment.center,
+    child: progressiveDots,
+  ),
+);
+
+var loadingprogressiveDots = Container(
+  padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
+  child: Align(
+    alignment: Alignment.center,
+    child: progressiveDots,
+  ),
+);
