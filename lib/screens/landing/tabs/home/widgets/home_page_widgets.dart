@@ -8,7 +8,6 @@ import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:timeline_tile/timeline_tile.dart';
-import 'package:water_reminder_app/common/utils/conversion.dart';
 import 'package:water_reminder_app/common/values/colors.dart';
 import 'package:water_reminder_app/common_widgets.dart';
 import 'package:water_reminder_app/screens/landing/tabs/home/controller/home_page_controller.dart';
@@ -606,8 +605,8 @@ showPopupDialog(BuildContext context) {
                               temp.trim() == '000' ||
                               temp.trim() == '0000') {
                             Navigator.pop(context);
-                            Get.snackbar('Did you even drink?',
-                                'Come on, be serious!',
+                            Get.snackbar(
+                                'Did you even drink?', 'Come on, be serious!',
                                 backgroundColor: Colors.white);
                           } else {
                             var value = double.parse(temp);
