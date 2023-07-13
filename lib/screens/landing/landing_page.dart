@@ -10,11 +10,22 @@ class LandingPage extends StatelessWidget {
   LandingPage({super.key});
 
   final landingController = Get.put(LandingController());
+  var tabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic> data =
+        (ModalRoute.of(context)!.settings.arguments ?? {}) as Map;
+
+    if (data.isEmpty) {
+      tabIndex = 0;
+    } else {
+      tabIndex = data['index'];
+    }
+
     return DefaultTabController(
       length: 3,
+      initialIndex: tabIndex,
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(70.0),
@@ -37,7 +48,7 @@ class LandingPage extends StatelessWidget {
               ),
             ],
             onTap: (value) async {
-              await landingController.setTabPosition(value);
+              landingController.setTabPosition(value);
             },
           ),
         ),

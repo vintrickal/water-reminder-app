@@ -45,7 +45,7 @@ var loadingfourRotatingDots = Container(
   padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
   child: Align(
     alignment: Alignment.center,
-    child: progressiveDots,
+    child: fourRotatingDots,
   ),
 );
 

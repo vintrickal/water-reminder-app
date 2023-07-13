@@ -9,6 +9,8 @@ import 'package:water_reminder_app/screens/splash/widgets/splash_page_widgets.da
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
 
+  static const route = '/splash_screen';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
