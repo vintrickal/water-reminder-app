@@ -6,12 +6,8 @@ class HistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Center(
-            child: Image.asset('assets/icons/png/coming_soon.png'),
-          ),
-        ],
+      body: Center(
+        child: Image.asset('assets/icons/png/coming_soon.png'),
       ),
     );
   }

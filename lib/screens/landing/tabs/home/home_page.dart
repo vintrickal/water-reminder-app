@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:water_reminder_app/common/services/firebase_api.dart';
 import 'package:water_reminder_app/common_widgets.dart';
 import 'package:water_reminder_app/global.dart';
 import 'package:water_reminder_app/screens/landing/tabs/home/controller/home_page_controller.dart';
@@ -52,12 +51,6 @@ class _HomePageState extends State<HomePage> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          ElevatedButton(
-            onPressed: () {
-              FirebaseApi().scheduleNotification();
-            },
-            child: Text('Show Notification'),
-          ),
           sizedBox10(),
           buildReminderAvatar(
               assetName: 'assets/icons/png/thumbs_up.png',
@@ -68,12 +61,10 @@ class _HomePageState extends State<HomePage> {
           buildAddWaterInTakeButton(
             assetName: 'assets/icons/png/water_cup_icon_v2.png',
             onTap: () {
-              setState(() {
-                homeController.computeWaterInTake(
-                    passedInTake: 200,
-                    goalInTake: 2280,
-                    timestamp: DateTime.now().millisecondsSinceEpoch);
-              });
+              homeController.computeWaterInTake(
+                  passedInTake: 200,
+                  goalInTake: 2280,
+                  timestamp: DateTime.now().millisecondsSinceEpoch);
             },
           ),
           buildTodayRecordText(

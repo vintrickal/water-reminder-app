@@ -91,7 +91,7 @@ Widget buildCircularProgressWaterInTake() {
       }
 
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return loadingfourRotatingDots;
+        return Container();
       }
 
       return Column(
@@ -191,52 +191,57 @@ Widget buildAddWaterInTakeButton(
         children: [
           InkWell(
             onTap: onTap,
-            child: Stack(alignment: Alignment.center, children: [
-              Container(
-                  padding: EdgeInsets.all(15),
+            child: Container(
+              height: 120,
+              child: Stack(alignment: Alignment.center, children: [
+                // Container(
+                //   padding: EdgeInsets.all(15),
+                //   decoration: BoxDecoration(
+                //     shape: BoxShape.circle,
+                //     color: Colors.blue.shade200,
+                //     border: Border.all(color: Colors.blue.shade300, width: 2),
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: Colors.black.withOpacity(0.2),
+                //         spreadRadius: 1,
+                //         blurRadius: 5,
+                //         offset: Offset(1, 1), // changes position of shadow
+                //       ),
+                //     ],
+                //   ),
+                //   child:
+                Container(
+                  width: 50.w,
+                  height: 50.h,
+                  child: Image.asset(assetName),
+                ),
+                // ),
+                Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.blue.shade200,
-                    border: Border.all(color: Colors.blue.shade300, width: 2),
+                    color: Colors.white,
+                    // border: Border.all(width: 2, color: Colors.blue),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withOpacity(0.5),
                         spreadRadius: 1,
-                        blurRadius: 5,
+                        blurRadius: 2,
                         offset: Offset(1, 1), // changes position of shadow
                       ),
                     ],
                   ),
-                  child: Container(
-                    width: 50.w,
-                    height: 50.h,
-                    child: Image.asset(assetName),
-                  )),
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  // border: Border.all(width: 2, color: Colors.blue),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 2,
-                      offset: Offset(1, 1), // changes position of shadow
-                    ),
-                  ],
+                  child: Icon(
+                    Icons.add,
+                    size: 15,
+                    color: Colors.black.withOpacity(0.5),
+                  ),
                 ),
-                child: Icon(
-                  Icons.add,
-                  size: 15,
-                  color: Colors.black.withOpacity(0.5),
-                ),
-              ),
-            ]),
+              ]),
+            ),
           ),
           Positioned(
-            bottom: 0,
-            right: 0,
+            top: 0,
+            right: 15,
             child: InkWell(
               onTap: () {
                 print('InkWell was clicked!');
@@ -255,10 +260,10 @@ Widget buildAddWaterInTakeButton(
                   ],
                 ),
                 child: Container(
-                  width: 25,
-                  height: 25,
+                  width: 20,
+                  height: 20,
                   child: Icon(
-                    Icons.edit,
+                    Icons.restart_alt_outlined,
                     size: 15,
                     color: Colors.blue.withOpacity(0.8),
                   ),
@@ -340,12 +345,12 @@ Widget timelineTile({
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(time),
+                Text(time), // Time String
                 Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(inTake),
+                      Text(inTake), // Intake Value String
                       PopupMenuButton<OptionItem>(
                         initialValue: selectedMenu,
                         onSelected: onSelected,
@@ -391,7 +396,7 @@ Widget buildTodayRecordText({void Function()? onTap}) {
           Container(
               margin: EdgeInsets.only(left: 15.w),
               child: reusableText(
-                  text: "Today's Record",
+                  text: "Tracking Record",
                   fontWeight: FontWeight.bold,
                   fontSize: 14.sp)),
           Icon(
@@ -427,7 +432,7 @@ Widget buildTimelineTracker({Widget? streamBuilder}) {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return loadingprogressiveDots;
+            return Container();
           }
 
           return Column(

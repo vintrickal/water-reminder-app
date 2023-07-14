@@ -45,9 +45,13 @@ class _MyAppState extends State<MyApp> {
               useMaterial3: true,
             ),
             home: Obx(
-              () => mainController.didUserExist
-                  ? LandingPage()
-                  : const SplashPage(),
+              () => mainController.isLoading
+                  ? CircularProgressIndicator(
+                      color: Colors.blue[400],
+                    )
+                  : mainController.didUserExist
+                      ? LandingPage()
+                      : const SplashPage(),
             ));
       },
     );

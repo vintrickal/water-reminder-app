@@ -22,6 +22,8 @@ class HomeController extends GetxController {
   RxDouble _goal = 0.0.obs;
   RxString _userWaterIntakeId = ''.obs;
   RxString _userId = ''.obs;
+  RxString _deviceToken = ''.obs;
+
   RxInt _dateTimeRecord = 0.obs;
   var _waterInTakeStream;
   var _userWaterInTakeStream;
@@ -37,17 +39,24 @@ class HomeController extends GetxController {
   get userWaterInTakeStream => _userWaterInTakeStream;
   get userId => _userId.value;
   get dateTimeRecord => _dateTimeRecord.value;
+  get deviceToken => _deviceToken.value;
 
   setUserId() {
     if (mainController.userId != '') {
       _userId.update((val) {
         _userId.value = mainController.userId;
       });
+      _deviceToken.update((val) {
+        _deviceToken.value = mainController.deviceToken;
+      });
     }
 
     if (onboardingController.userId != '') {
       _userId.update((val) {
         _userId.value = onboardingController.userId;
+      });
+      _deviceToken.update((val) {
+        _deviceToken.value = onboardingController.deviceToken;
       });
     }
   }

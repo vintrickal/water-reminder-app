@@ -35,11 +35,13 @@ class FirebaseApi {
   void handleMessage(RemoteMessage? message) {
     if (message == null) return;
 
-    landingController.setTabPosition(1);
-    Get.to(() => LandingPage(), arguments: {'index': 1});
+    landingController.setTabPosition(0);
+    Get.to(() => LandingPage(), arguments: {'index': 0});
   }
 
   Future initPushNotifications() async {
+    /// Update the iOS foreground notification presentation options to allow
+    /// heads up notifications.
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,
@@ -47,9 +49,15 @@ class FirebaseApi {
       sound: true,
     );
 
+    //Opened from terminated state [Firebase Cloud Messaging notifcation]
     FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
+
+    //Opened from a background state
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
+
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+
+    // While app is in an opened state
     FirebaseMessaging.onMessage.listen((message) {
       final notification = message.notification;
       if (notification == null) return;
@@ -84,11 +92,14 @@ class FirebaseApi {
       },
     );
 
+    /// Create an Android Notification Channel.
+    ///
+    /// We use this channel in the `AndroidManifest.xml` file to override the
+    /// default FCM channel to enable heads up notifications.
     final platform = _localNotifications.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>();
     await platform?.createNotificationChannel(_androidChannel);
   }
-
 
   // FIND WAYS TO STORE THE GENERATED DEVICE TOKEN AND STORED IT
   // ALONG WITH THE USER DATA
@@ -121,12 +132,35 @@ class FirebaseApi {
         androidAllowWhileIdle: true);
   }
 
+  periodicallyShow() async {
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
+      'high_importance_channel',
+      'High Importance Notifications',
+      channelDescription: 'This channel is used for important notification.',
+      importance: Importance.defaultImportance,
+    );
+    var iOSPlatformChannelSpecifics = const DarwinNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iOSPlatformChannelSpecifics,
+    );
+
+    await _localNotifications.periodicallyShow(
+        0,
+        'Stay Hydrated!',
+        "Don't forget to drink your water!",
+        RepeatInterval.hourly,
+        platformChannelSpecifics,
+        androidAllowWhileIdle: true);
+  }
+
   Future<void> initNotifications() async {
     await _firebaseMessaging.requestPermission();
-    final fCMToken = await _firebaseMessaging.getToken();
-    print('Token: $fCMToken');
+    // final fCMToken = await _firebaseMessaging.getToken();
+    // print('Token: $fCMToken');
     initPushNotifications();
     initLocalNotifications();
-    scheduleNotification();
+    // scheduleNotification();
+    periodicallyShow();
   }
 }
