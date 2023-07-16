@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:water_reminder_app/screens/landing/controller/landing_controller.dart';
 import 'package:water_reminder_app/screens/landing/tabs/history/history_page.dart';
+import 'package:water_reminder_app/screens/landing/tabs/home/controller/home_page_controller.dart';
 import 'package:water_reminder_app/screens/landing/tabs/home/home_page.dart';
 import 'package:water_reminder_app/screens/landing/tabs/settings/settings_page.dart';
 import 'package:water_reminder_app/screens/landing/widgets/landing_page_widgets.dart';
@@ -10,6 +12,7 @@ class LandingPage extends StatelessWidget {
   LandingPage({super.key});
 
   final landingController = Get.put(LandingController());
+  final homeController = Get.put(HomeController());
   var tabIndex = 0;
 
   @override

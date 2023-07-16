@@ -154,4 +154,13 @@ class StorageService {
           (value) => print('DocumentSnapshot successfully updated!'),
         );
   }
+
+  Future<void> updateSelectedCup(
+      String id, Map<String, dynamic> cupSelectedItem) async {
+    final ref = await FirebaseFirestore.instance.collection('user');
+
+    ref.doc(id).update(cupSelectedItem).then(
+          (value) => print('DocumentSnapshot successfully updated!'),
+        );
+  }
 }

@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:water_reminder_app/common/models/cup_model.dart';
 import 'package:water_reminder_app/common/models/user_water_intake_model.dart';
 import 'package:water_reminder_app/common/models/water_intake_model.dart';
 import 'package:water_reminder_app/common/utils/conversion.dart';
+import 'package:water_reminder_app/common/values/list.dart';
 import 'package:water_reminder_app/global.dart';
 import 'package:water_reminder_app/main_controller.dart';
 import 'package:water_reminder_app/screens/landing/tabs/home/home_page.dart';
@@ -23,6 +25,9 @@ class HomeController extends GetxController {
   RxString _userWaterIntakeId = ''.obs;
   RxString _userId = ''.obs;
   RxString _deviceToken = ''.obs;
+  RxString _selectedCup = '3'.obs;
+  RxString _selectedCupCapacity = '200'.obs;
+  RxString _selectedCupPath = 'assets/icons/png/200ml.png'.obs;
 
   RxInt _dateTimeRecord = 0.obs;
   var _waterInTakeStream;
@@ -40,6 +45,9 @@ class HomeController extends GetxController {
   get userId => _userId.value;
   get dateTimeRecord => _dateTimeRecord.value;
   get deviceToken => _deviceToken.value;
+  get selectedCup => _selectedCup.value;
+  get selectedCupCapacity => _selectedCupCapacity.value;
+  get selectedCupPath => _selectedCupPath.value;
 
   setUserId() {
     if (mainController.userId != '') {
@@ -96,6 +104,28 @@ class HomeController extends GetxController {
           value: getFusionId());
 
       _goal.value = document[0]['goal_intake'];
+
+      List defaultCup = await Global.storageService.getCollection(
+          collectionName: 'user', keyword: 'user_id', value: _userId.value);
+
+      var index = int.parse(defaultCup[0]['selected_cup']);
+
+      // Set the user cup
+      _selectedCup.update((val) {
+        _selectedCup.value = defaultCup[0]['selected_cup'];
+      });
+
+      // Set the user cup capacity
+      _selectedCupCapacity.update(
+        (val) {
+          _selectedCupCapacity.value = cups[index].capacity!;
+        },
+      );
+
+      // Set the user cup path
+      _selectedCupPath.update((val) {
+        _selectedCupPath.value = cups[index].path!;
+      });
     }
   }
 
@@ -110,12 +140,14 @@ class HomeController extends GetxController {
     return userWaterIntakeStream;
   }
 
-  void computeWaterInTake(
-      {required double passedInTake,
-      required double goalInTake,
-      required int timestamp}) async {
+  void computeWaterInTake({
+    required double passedInTake,
+    required double goalInTake,
+    required int timestamp,
+    required String selectedCup,
+  }) async {
     try {
-      if (_percent + 0.1 < 1.0) {
+      if (_percent.round() + 0.1 < 1.0) {
         _begin.value = _inTake.value;
         _inTake.value = _begin.value + passedInTake;
         _end.value = _inTake.value;
@@ -134,7 +166,7 @@ class HomeController extends GetxController {
     model.id = '';
     model.user_water_intake_id = getFusionId();
     model.intake = passedInTake;
-    model.type = 'cup';
+    model.type = homeController.selectedCup;
     model.user_id = _userId.value;
     model.time = timestamp;
 
@@ -231,6 +263,9 @@ class HomeController extends GetxController {
 
     // process the updated water intake
     var currentIntake = _end.value - map['intake'];
+    _end.update((val) {
+      _end.value = currentIntake;
+    });
     var percent = currentIntake == 0 ? 0 : currentIntake / _goal.value;
 
     Map<String, dynamic> items = {
@@ -266,5 +301,22 @@ class HomeController extends GetxController {
     intakeController.text = intake.toString().contains('.')
         ? intake.toString().substring(0, intake.toString().indexOf('.'))
         : intake.toString();
+  }
+
+  setSelectedCup(CupModel model) {
+    _selectedCup.update((val) {
+      _selectedCup.value = model.id!;
+    });
+
+    _selectedCupCapacity.update((val) {
+      _selectedCupCapacity.value = model.capacity!;
+    });
+
+    _selectedCupPath.update((val) {
+      _selectedCupPath.value = model.path!;
+    });
+
+    Map<String, dynamic> item = {'selected_cup': _selectedCup.value};
+    Global.storageService.updateSelectedCup(_userId.value, item);
   }
 }

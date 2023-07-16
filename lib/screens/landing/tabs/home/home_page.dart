@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:water_reminder_app/common/values/colors.dart';
 import 'package:water_reminder_app/common_widgets.dart';
 import 'package:water_reminder_app/global.dart';
 import 'package:water_reminder_app/screens/landing/tabs/home/controller/home_page_controller.dart';
@@ -19,7 +20,7 @@ class _HomePageState extends State<HomePage> {
 
   var waterIntakeStream;
   var userWaterInTakeStream;
-
+  ValueNotifier<bool> isDialOpen = ValueNotifier(false);
   @override
   void initState() {
     homeController.setUserId();
@@ -48,33 +49,31 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          sizedBox10(),
-          buildReminderAvatar(
-              assetName: 'assets/icons/png/thumbs_up.png',
-              quote: "Drink your glass of water slowly with some small sips",
-              count: 0),
-          sizedBox10(),
-          buildCircularProgressWaterInTake(),
-          buildAddWaterInTakeButton(
-            assetName: 'assets/icons/png/water_cup_icon_v2.png',
-            onTap: () {
-              homeController.computeWaterInTake(
-                  passedInTake: 200,
-                  goalInTake: 2280,
-                  timestamp: DateTime.now().millisecondsSinceEpoch);
-            },
-          ),
-          buildTodayRecordText(
-            onTap: () {
-              showPopupDialog(context);
-            },
-          ),
-          buildTimelineTracker(),
-        ],
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBG,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            sizedBox10(),
+            buildReminderAvatar(
+                assetName: 'assets/icons/png/thumbs_up.png',
+                quote: "Drink your glass of water slowly with some small sips",
+                count: 0),
+            sizedBox20(),
+            buildCircularProgressWaterInTake(),
+            sizedBox20(),
+            buildTodayRecordText(
+              onTap: () {
+                showPopupDialog(context);
+              },
+            ),
+            buildTimelineTracker(),
+          ],
+        ),
       ),
+      floatingActionButton:
+          buildFloatingActionButton(context, isDialOpen: isDialOpen),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

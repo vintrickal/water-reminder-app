@@ -3,12 +3,17 @@ import 'package:countup/countup.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:water_reminder_app/common/values/colors.dart';
+import 'package:water_reminder_app/common/values/list.dart';
 import 'package:water_reminder_app/common_widgets.dart';
 import 'package:water_reminder_app/screens/landing/tabs/home/controller/home_page_controller.dart';
 import 'package:water_reminder_app/screens/landing/tabs/home/home_page.dart';
@@ -35,13 +40,7 @@ Widget buildFirstReminderAvatar({
           constraints: BoxConstraints(
             maxWidth: 200,
           ),
-          child: Text(
-            quote,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
+          child: reusableText(text: quote, textColor: Colors.white),
         ),
       )
     ],
@@ -63,18 +62,16 @@ Widget buildReminderAvatar({
       ),
       ChatBubble(
         clipper: ChatBubbleClipper1(type: BubbleType.receiverBubble),
-        backGroundColor: Colors.blue.shade200,
+        backGroundColor: Colors.blue.shade400,
         margin: EdgeInsets.only(top: 20),
         child: Container(
           constraints: BoxConstraints(
             maxWidth: 256,
           ),
-          child: Text(
-            quote,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-            ),
+          child: Padding(
+            padding: EdgeInsets.only(left: 8.w),
+            child: reusableText(
+                text: quote, fontSize: 13.sp, textColor: Colors.white),
           ),
         ),
       )
@@ -103,7 +100,7 @@ Widget buildCircularProgressWaterInTake() {
                 data['current_intake'].toString(),
               ),
               documentId: data['id']);
-          return buildCircularProgress(
+          return buildRowProgress(
             percent: double.parse(data['percent_intake'].toString()),
             begin: double.parse(data['past_intake'].toString()),
             end: double.parse(data['current_intake'].toString()),
@@ -116,163 +113,254 @@ Widget buildCircularProgressWaterInTake() {
   );
 }
 
-Widget buildCircularProgress({
+Widget buildRowProgress({
   required double percent,
   required double begin,
   required double end,
   required double goal,
 }) {
-  return CircularPercentIndicator(
-    animateFromLastPercent: true,
-    radius: 130.0,
-    animation: true,
-    animationDuration: 500,
-    lineWidth: 30.0,
-    percent: percent,
-    center: CircleAvatar(
-      radius: percent == 1 ? 100 : 90,
-      backgroundColor: Colors.blue.shade600,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            margin: EdgeInsets.only(bottom: 5.h, top: 15.h),
-            decoration: BoxDecoration(
-                image: DecorationImage(
-              image: AssetImage('assets/icons/png/water_splash_icon.png'),
-            )),
+  return Container(
+    margin: EdgeInsets.only(left: 10, right: 10),
+    padding: EdgeInsets.all(15),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.2),
+          spreadRadius: 1,
+          blurRadius: 5,
+          offset: Offset(1, 3), // changes position of shadow
+        ),
+      ],
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        CircularPercentIndicator(
+          animateFromLastPercent: true,
+          radius: 55.0,
+          animation: true,
+          animationDuration: 500,
+          lineWidth: 10.0,
+          percent: percent,
+          center: CircleAvatar(
+            radius: 35,
+            backgroundColor: Colors.white,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Countup(
+                  begin: 0,
+                  end: percent * 100,
+                  duration: Duration(milliseconds: 500),
+                  style: GoogleFonts.poppins(
+                      color: Colors.blue,
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.normal),
+                ),
+                reusableText(text: '%', textColor: Colors.blue, fontSize: 24.sp)
+              ],
+            ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+          circularStrokeCap: CircularStrokeCap.round,
+          backgroundColor: Colors.grey.shade300,
+          progressColor: Colors.blue.shade600,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              child: reusableText(
+                text: 'Today You Drank:',
+                fontSize: 18,
+              ),
+            ),
+            Container(
+              child: Row(
                 children: [
                   Countup(
                     begin: begin,
                     end: end,
                     duration: Duration(milliseconds: 500),
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24.sp,
+                    style: GoogleFonts.poppins(
+                        color: AppColors.cardBgColor,
+                        fontSize: 15.sp,
                         fontWeight: FontWeight.normal),
                   ),
-                  reusableText(
-                      text:
-                          ' / ${goal.toString().contains('.') ? goal.toString().substring(0, goal.toString().indexOf('.')) : goal.toString()}',
-                      textColor: Colors.white,
-                      fontSize: 24.sp)
+                  Container(
+                    child: reusableText(
+                        text: 'ml',
+                        fontSize: 15,
+                        textColor: AppColors.cardBgColor),
+                  ),
                 ],
               ),
-              reusableText(
-                text: 'Water Intake Goal',
-                textColor: Colors.white,
-                fontSize: 18.sp,
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Container(
+              child: reusableText(
+                text: 'Goal intake:',
+                fontSize: 18,
               ),
-            ],
-          )
-        ],
-      ),
+            ),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  reusableText(
+                      text: '2280ml',
+                      fontSize: 15,
+                      textColor: AppColors.cardBgColor),
+                ],
+              ),
+            )
+          ],
+        ),
+      ],
     ),
-    circularStrokeCap: CircularStrokeCap.round,
-    backgroundColor: Colors.grey.shade300,
-    progressColor: Colors.blue.shade600,
   );
 }
 
-Widget buildAddWaterInTakeButton(
-    {required String assetName, required void Function() onTap}) {
-  return Container(
-    margin: EdgeInsets.only(right: 30.w),
-    child: Align(
-      alignment: Alignment.centerRight,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          InkWell(
-            onTap: onTap,
-            child: Container(
-              height: 120,
-              child: Stack(alignment: Alignment.center, children: [
-                // Container(
-                //   padding: EdgeInsets.all(15),
-                //   decoration: BoxDecoration(
-                //     shape: BoxShape.circle,
-                //     color: Colors.blue.shade200,
-                //     border: Border.all(color: Colors.blue.shade300, width: 2),
-                //     boxShadow: [
-                //       BoxShadow(
-                //         color: Colors.black.withOpacity(0.2),
-                //         spreadRadius: 1,
-                //         blurRadius: 5,
-                //         offset: Offset(1, 1), // changes position of shadow
-                //       ),
-                //     ],
-                //   ),
-                //   child:
-                Container(
-                  width: 50.w,
-                  height: 50.h,
-                  child: Image.asset(assetName),
-                ),
-                // ),
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                    // border: Border.all(width: 2, color: Colors.blue),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 2,
-                        offset: Offset(1, 1), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.add,
-                    size: 15,
-                    color: Colors.black.withOpacity(0.5),
-                  ),
-                ),
-              ]),
-            ),
-          ),
-          Positioned(
-            top: 0,
-            right: 15,
-            child: InkWell(
-              onTap: () {
-                print('InkWell was clicked!');
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 2,
-                      offset: Offset(1, 1), // changes position of shadow
-                    ),
-                  ],
-                ),
+Widget buildFloatingActionButton(BuildContext context,
+    {required ValueNotifier<bool> isDialOpen}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 10),
+    child: SpeedDial(
+      tooltip: 'Click me after drinking water!',
+      icon: Icons.water_drop_outlined,
+      activeIcon: Icons.water_drop,
+      spacing: 2,
+      mini: false,
+      openCloseDial: isDialOpen,
+      childPadding: const EdgeInsets.all(5),
+      spaceBetweenChildren: 2,
+      buttonSize: Size(56.0, 56.0),
+      childrenButtonSize: Size(56.0, 56.0),
+      visible: true,
+      direction: SpeedDialDirection.up,
+      switchLabelPosition: false,
+      closeManually: false,
+      renderOverlay: true,
+      overlayOpacity: 0.5,
+      onOpen: () => debugPrint('OPENING DIAL'),
+      onClose: () => debugPrint('DIAL CLOSED'),
+      useRotationAnimation: true,
+      heroTag: 'speed-dial-hero-tag',
+      elevation: 8.0,
+      animationCurve: Curves.elasticInOut,
+      isOpenOnStart: false,
+      children: [
+        SpeedDialChild(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              InkWell(
+                onTap: () {
+                  showPopupDialogCups(context);
+                },
                 child: Container(
-                  width: 20,
-                  height: 20,
-                  child: Icon(
-                    Icons.restart_alt_outlined,
-                    size: 15,
-                    color: Colors.blue.withOpacity(0.8),
-                  ),
+                  child: Stack(alignment: Alignment.center, children: [
+                    Obx(
+                      () => Container(
+                        width: homeController.selectedCupPath ==
+                                    'assets/icons/png/300ml.png' ||
+                                homeController.selectedCupPath ==
+                                    'assets/icons/png/500ml.png' ||
+                                homeController.selectedCupPath ==
+                                    'assets/icons/png/200ml.png'
+                            ? 50.w
+                            : 35.w,
+                        height:
+                            homeController.selectedCupPath ==
+                                        'assets/icons/png/300ml.png' ||
+                                    homeController.selectedCupPath ==
+                                        'assets/icons/png/500ml.png' ||
+                                    homeController.selectedCupPath ==
+                                        'assets/icons/png/200ml.png'
+                                ? 50.w
+                                : 35.w,
+                        child: Image.asset(homeController.selectedCupPath),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.blue[400],
+                        child: Icon(
+                          Icons.repeat_rounded,
+                          size: 15,
+                          color: Colors.white,
+                        ),
+                        maxRadius: 10,
+                      ),
+                    )
+                  ]),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          label: 'Switch Cup',
+          onTap: () => showPopupDialogCups(context),
+        ),
+        SpeedDialChild(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              InkWell(
+                onTap: () {
+                  homeController.setTimeRecord(DateTime.now());
+                  homeController.computeWaterInTake(
+                      passedInTake:
+                          double.parse(homeController.selectedCupCapacity),
+                      goalInTake: 2280,
+                      timestamp: homeController.dateTimeRecord,
+                      selectedCup: homeController.selectedCup);
+                  isDialOpen.value = false;
+                },
+                child: Container(
+                  // height: 120,
+                  child: Stack(alignment: Alignment.center, children: [
+                    Icon(
+                      Icons.water_drop,
+                      size: 50,
+                      color: Colors.blue,
+                    ),
+                    Container(
+                      child: Icon(
+                        Icons.add,
+                        size: 25,
+                        weight: 50,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ]),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          label: 'Drink Water',
+          onTap: () {
+            homeController.setTimeRecord(DateTime.now());
+            homeController.computeWaterInTake(
+                passedInTake: double.parse(homeController.selectedCupCapacity),
+                goalInTake: 2280,
+                timestamp: homeController.dateTimeRecord,
+                selectedCup: homeController.selectedCup);
+            isDialOpen.value = false;
+          },
+          onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
+        ),
+      ],
     ),
   );
 }
@@ -317,23 +405,23 @@ Widget timelineTile({
         dashColor: AppColors.primaryThirdElementText,
       ),
       Container(
-        height: 60.h,
+        height: 70.h,
         child: TimelineTile(
           alignment: TimelineAlign.manual,
           lineXY: 0.0,
           isFirst: isFirst!,
           isLast: isLast!,
           afterLineStyle: LineStyle(
-            color: Colors.blue.shade200,
+            color: Colors.transparent,
             thickness: 3,
           ),
           beforeLineStyle: LineStyle(
-            color: Colors.blue.shade200,
+            color: Colors.transparent,
             thickness: 3,
           ),
           indicatorStyle: IndicatorStyle(
-            width: 35,
-            height: 35,
+            width: 30,
+            height: 30,
             indicator: _indicatorIcon(assetName),
             indicatorXY: indicatorXY!,
             padding: EdgeInsets.only(
@@ -341,16 +429,22 @@ Widget timelineTile({
           ),
           axis: TimelineAxis.vertical,
           endChild: Container(
-            margin: EdgeInsets.only(right: 10.w, bottom: 5.h),
+            margin: EdgeInsets.only(right: 10.w, bottom: 1.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(time), // Time String
+                reusableText(
+                  text: time,
+                  fontSize: 13.sp,
+                ),
                 Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(inTake), // Intake Value String
+                      reusableText(
+                        text: inTake,
+                        fontSize: 13.sp,
+                      ), // Intake Value String
                       PopupMenuButton<OptionItem>(
                         initialValue: selectedMenu,
                         onSelected: onSelected,
@@ -381,9 +475,7 @@ Widget timelineTile({
 }
 
 Widget _indicatorIcon(String assetName) {
-  return Stack(children: [
-    Image.asset(assetName),
-  ]);
+  return Image.asset(assetName);
 }
 
 Widget buildTodayRecordText({void Function()? onTap}) {
@@ -442,13 +534,20 @@ Widget buildTimelineTracker({Widget? streamBuilder}) {
               String timeFormat = homeController.getTimeFormat(data['time']);
 
               return buildStartTimeline(
-                assetName: 'assets/icons/png/water_cup_icon_new.png',
+                assetName: cups[int.parse(data['type'])].path!,
                 time: timeFormat,
                 inTake:
                     '${data['intake'].toString().substring(0, data['intake'].toString().indexOf('.'))}ml',
                 onSelected: homeController.setSelectedOption(),
                 onTapDelete: () {
+                  EasyLoading.show(
+                    indicator: loadingStaggeredDots,
+                    status: 'Retrieving data...',
+                    maskType: EasyLoadingMaskType.clear,
+                    dismissOnTap: false,
+                  );
                   homeController.onTapDelete(data);
+                  EasyLoading.dismiss();
                 },
                 onTapEdit: () {
                   homeController.onTapEdit(data, context);
@@ -507,10 +606,14 @@ Widget buildTimeOption(BuildContext context, TextEditingController controller,
       ),
       Container(
         child: Row(children: [
-          SizedBox(
-            width: 45,
-            height: 45,
-            child: Image.asset('assets/icons/png/water_cup_icon_new.png'),
+          Stack(
+            children: [
+              SizedBox(
+                width: 45,
+                height: 45,
+                child: Image.asset(homeController.selectedCupPath),
+              ),
+            ],
           ),
           const SizedBox(
             width: 10,
@@ -556,95 +659,97 @@ showPopupDialog(BuildContext context) {
   return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.center,
-            children: <Widget>[
-              Container(
-                  width: MediaQuery.of(context).size.width - 16,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.white),
-                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 4),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 8.0),
-                      Icon(
-                        Icons.watch_later_outlined,
-                        size: 50,
-                      ),
-                      sizedBox20(),
-                      Material(
-                        color: Colors.white,
-                        child: Text(
-                          'Did you forgot to logged your intake again?',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 17.0,
-                            fontFamily: 'LexendDeca',
+        return StatefulBuilder(builder: (context, setState) {
+          return Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: <Widget>[
+                Container(
+                    width: MediaQuery.of(context).size.width - 16,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white),
+                    padding: const EdgeInsets.fromLTRB(24, 20, 24, 4),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 8.0),
+                        Icon(
+                          Icons.watch_later_outlined,
+                          size: 50,
+                        ),
+                        sizedBox20(),
+                        Material(
+                          color: Colors.white,
+                          child: Text(
+                              'Did you forgot to logged your intake again?',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17.0,
+                              )),
+                        ),
+                        const SizedBox(height: 50),
+                        buildTimeOption(
+                            context, homeController.intakeController,
+                            onTimeChange: (time) {
+                          homeController.setTimeRecord(time);
+                        }, time: DateTime.now()),
+                        const SizedBox(height: 50),
+                        ElevatedButton(
+                          onPressed: () {
+                            var temp = homeController.intakeController.text;
+
+                            if (temp.trim().isEmpty) {
+                              Navigator.pop(context);
+                              Get.snackbar('Missing intake value!',
+                                  'You forgot to put some value in it.',
+                                  backgroundColor: Colors.white);
+                            } else if (temp.trim() == '0' ||
+                                temp.trim() == '00' ||
+                                temp.trim() == '000' ||
+                                temp.trim() == '0000') {
+                              Navigator.pop(context);
+                              Get.snackbar(
+                                  'Did you even drink?', 'Come on, be serious!',
+                                  backgroundColor: Colors.white);
+                            } else {
+                              var value = double.parse(temp);
+
+                              homeController.computeWaterInTake(
+                                  passedInTake: value,
+                                  goalInTake: 2280,
+                                  timestamp: homeController.dateTimeRecord,
+                                  selectedCup: homeController.selectedCup);
+
+                              // Reset the value
+                              homeController.intakeController.text = '';
+                              Navigator.pop(context);
+                            }
+                          },
+                          child: Text('OK'.toUpperCase()),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: const Color(0xFFFFFFFF),
+                            backgroundColor:
+                                AppColors.primaryElement, // foreground
+                            padding: const EdgeInsets.all(15.0),
+                            minimumSize: const Size.fromHeight(48),
+                            textStyle: const TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'LexendDeca',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      buildTimeOption(context, homeController.intakeController,
-                          onTimeChange: (time) {
-                        homeController.setTimeRecord(time);
-                      }, time: DateTime.now()),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          var temp = homeController.intakeController.text;
-
-                          if (temp.trim().isEmpty) {
-                            Navigator.pop(context);
-                            Get.snackbar('Missing intake value!',
-                                'You forgot to put some value in it.',
-                                backgroundColor: Colors.white);
-                          } else if (temp.trim() == '0' ||
-                              temp.trim() == '00' ||
-                              temp.trim() == '000' ||
-                              temp.trim() == '0000') {
-                            Navigator.pop(context);
-                            Get.snackbar(
-                                'Did you even drink?', 'Come on, be serious!',
-                                backgroundColor: Colors.white);
-                          } else {
-                            var value = double.parse(temp);
-
-                            homeController.computeWaterInTake(
-                                passedInTake: value,
-                                goalInTake: 2280,
-                                timestamp: homeController.dateTimeRecord);
-
-                            // Reset the value
-                            homeController.intakeController.text = '';
-                            Navigator.pop(context);
-                          }
-                        },
-                        child: Text('OK'.toUpperCase()),
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: const Color(0xFFFFFFFF),
-                          backgroundColor:
-                              const Color(0xFFEB5353), // foreground
-                          padding: const EdgeInsets.all(15.0),
-                          minimumSize: const Size.fromHeight(48),
-                          textStyle: const TextStyle(
-                            fontSize: 14,
-                            fontFamily: 'LexendDeca',
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                    ],
-                  ))
-            ]);
+                        const SizedBox(height: 20),
+                      ],
+                    ))
+              ]);
+        });
       });
 }
 
@@ -652,88 +757,197 @@ showPopupDialogEdit(BuildContext context, Map<String, dynamic> map) {
   return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.center,
-            children: <Widget>[
-              Container(
-                  width: MediaQuery.of(context).size.width - 16,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.white),
-                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 4),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 8.0),
-                      Icon(
-                        Icons.watch_later_outlined,
-                        size: 50,
-                      ),
-                      sizedBox20(),
-                      Material(
-                        color: Colors.white,
-                        child: Text(
-                          'Did you forgot to logged your intake again?',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 17.0,
-                            fontFamily: 'LexendDeca',
+        return StatefulBuilder(builder: (context, setState) {
+          return Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: <Widget>[
+                Container(
+                    width: MediaQuery.of(context).size.width - 16,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white),
+                    padding: const EdgeInsets.fromLTRB(24, 20, 24, 4),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 8.0),
+                        Icon(
+                          Icons.watch_later_outlined,
+                          size: 50,
+                        ),
+                        sizedBox20(),
+                        Material(
+                          color: Colors.white,
+                          child: Text(
+                            'Here to change your water intake?',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17.0,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      buildTimeOption(context, homeController.intakeController,
+                        const SizedBox(height: 16),
+                        buildTimeOption(
+                          context,
+                          homeController.intakeController,
                           onTimeChange: (time) {
-                        homeController.setTimeRecord(time);
-                      },
+                            homeController.setTimeRecord(time);
+                          },
                           time:
-                              DateTime.fromMillisecondsSinceEpoch(map['time'])),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          var temp = homeController.intakeController.text;
+                              DateTime.fromMillisecondsSinceEpoch(map['time']),
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            var temp = homeController.intakeController.text;
 
-                          if (temp.trim().isEmpty) {
-                            Get.snackbar('Missing intake value!',
-                                'You forgot to put some value in it.');
-                          } else {
-                            var value = double.parse(temp);
+                            if (temp.trim().isEmpty) {
+                              Get.snackbar('Missing intake value!',
+                                  'You forgot to put some value in it.');
+                            } else {
+                              var value = double.parse(temp);
 
-                            homeController.updateComputationWaterInTake(
-                                passedInTake: value,
-                                goalInTake: 2280,
-                                timestamp: homeController.dateTimeRecord,
-                                id: map['id'],
-                                pastIntake: map['intake']);
+                              homeController.updateComputationWaterInTake(
+                                  passedInTake: value,
+                                  goalInTake: 2280,
+                                  timestamp: homeController.dateTimeRecord,
+                                  id: map['id'],
+                                  pastIntake: map['intake']);
 
-                            // Reset the value
-                            homeController.intakeController.text = '';
-                            Navigator.pop(context);
-                          }
-                        },
-                        child: Text('OK'.toUpperCase()),
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: const Color(0xFFFFFFFF),
-                          backgroundColor:
-                              const Color(0xFFEB5353), // foreground
-                          padding: const EdgeInsets.all(15.0),
-                          minimumSize: const Size.fromHeight(48),
-                          textStyle: const TextStyle(
-                            fontSize: 14,
-                            fontFamily: 'LexendDeca',
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                              // Reset the value
+                              homeController.intakeController.text = '';
+                              Navigator.pop(context);
+                            }
+                          },
+                          child: Text('OK'.toUpperCase()),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: const Color(0xFFFFFFFF),
+                            backgroundColor:
+                                AppColors.primaryElement, // foreground
+                            padding: const EdgeInsets.all(15.0),
+                            minimumSize: const Size.fromHeight(48),
+                            textStyle: const TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'LexendDeca',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                    ],
-                  ))
-            ]);
+                        const SizedBox(height: 20),
+                      ],
+                    ))
+              ]);
+        });
+      });
+}
+
+showPopupDialogCups(BuildContext context) {
+  return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: <Widget>[
+                Container(
+                    width: MediaQuery.of(context).size.width - 16,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white),
+                    padding: const EdgeInsets.fromLTRB(24, 20, 24, 4),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 8.0),
+                        Material(
+                          color: Colors.white,
+                          child: Text(
+                            'Switch Cups',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17.0,
+                            ),
+                          ),
+                        ),
+                        sizedBox20(),
+                        GridView(
+                            shrinkWrap: true,
+                            physics: const ScrollPhysics(),
+                            padding: const EdgeInsets.all(0),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                              childAspectRatio: 130.0 / 110.0,
+                            ),
+                            children: List.generate(cups.length, (index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(
+                                    () {
+                                      homeController
+                                          .setSelectedCup(cups[index]);
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: homeController.selectedCup == ''
+                                          ? Colors.transparent
+                                          : homeController.selectedCup ==
+                                                  cups[index].id!
+                                              ? Colors.grey[300]
+                                              : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 30,
+                                        height: 30,
+                                        child: Image.asset(cups[index].path!),
+                                      ),
+                                      sizedBox10(),
+                                      reusableText(
+                                        text: cups[index].type,
+                                        textColor:
+                                            homeController.selectedCup == ''
+                                                ? AppColors.primary_bg
+                                                : homeController.selectedCup ==
+                                                        cups[index].id!
+                                                    ? Colors.black
+                                                    : AppColors.primary_bg,
+                                        fontWeight:
+                                            homeController.selectedCup == ''
+                                                ? FontWeight.normal
+                                                : homeController.selectedCup ==
+                                                        cups[index].id!
+                                                    ? FontWeight.bold
+                                                    : FontWeight.normal,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            })),
+                        sizedBox20(),
+                      ],
+                    ))
+              ]);
+        });
       });
 }

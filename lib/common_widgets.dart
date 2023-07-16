@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:water_reminder_app/common/values/colors.dart';
 
@@ -9,11 +10,12 @@ Widget reusableText({
   double fontSize = 12,
   FontWeight? fontWeight = FontWeight.normal,
 }) {
-  return Text(
-    text!,
-    style:
-        TextStyle(color: textColor, fontSize: fontSize, fontWeight: fontWeight),
-  );
+  return Text(text!,
+      style: GoogleFonts.poppins(
+        color: textColor,
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+      ));
 }
 
 // SizedBox
@@ -41,6 +43,9 @@ var fourRotatingDots = LoadingAnimationWidget.fourRotatingDots(
 var progressiveDots = LoadingAnimationWidget.prograssiveDots(
     color: AppColors.primaryElement, size: 50);
 
+var staggeredDotsWave = LoadingAnimationWidget.staggeredDotsWave(
+    color: AppColors.primaryElement, size: 50);
+
 var loadingfourRotatingDots = Container(
   padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
   child: Align(
@@ -54,5 +59,13 @@ var loadingprogressiveDots = Container(
   child: Align(
     alignment: Alignment.center,
     child: progressiveDots,
+  ),
+);
+
+var loadingStaggeredDots = Container(
+  // padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
+  child: Align(
+    alignment: Alignment.center,
+    child: staggeredDotsWave,
   ),
 );

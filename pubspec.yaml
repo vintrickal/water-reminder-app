@@ -56,6 +56,10 @@ dependencies:
   flutter_local_notifications: ^15.1.0+1
   api_cache_manager: ^1.0.2
   cloud_functions: ^4.3.3
+  flutter_speed_dial: ^7.0.0
+  google_fonts: ^5.1.0
+  flutter_easyloading: ^3.0.5
+  fl_chart: ^0.63.0
 
 dev_dependencies:
   flutter_test:
