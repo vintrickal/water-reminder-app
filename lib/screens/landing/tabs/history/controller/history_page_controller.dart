@@ -5,6 +5,10 @@ import 'package:water_reminder_app/screens/landing/tabs/home/controller/home_pag
 class HistoryController extends GetxController {
   final homeController = Get.put(HomeController());
 
+  var _barGraphUserWaterIntake;
+
+  get barGraphUserWaterIntake => _barGraphUserWaterIntake;
+
   getBarGraphDataUserWaterIntake() {
     var userWaterIntakeStream;
 
@@ -21,5 +25,9 @@ class HistoryController extends GetxController {
     var fusionId = homeController.userId +
         '_${DateTime.now().day.toString().padLeft(2, "0")}_${DateTime.now().month.toString().padLeft(2, "0")}_${DateTime.now().year}';
     return fusionId;
+  }
+
+  saveBarGraphUserWaterIntake(dynamic val) {
+    _barGraphUserWaterIntake = val;
   }
 }

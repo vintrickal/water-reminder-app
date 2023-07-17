@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:water_reminder_app/global.dart';
 import 'package:water_reminder_app/main_controller.dart';
 import 'package:water_reminder_app/screens/landing/landing_page.dart';

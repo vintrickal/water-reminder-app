@@ -7,15 +7,17 @@ import 'package:water_reminder_app/screens/landing/tabs/settings/settings_page.d
 import 'package:water_reminder_app/screens/landing/widgets/landing_page_widgets.dart';
 
 class LandingPage extends StatelessWidget {
+  int tabIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
-      // initialIndex: 0,
+      initialIndex: tabIndex,
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(70.0),
-          child: buildAppBarLandingPage(
+          child: buildAppBarTabBar(
             tabs: [
               tabPlaceholder(
                 assetName: 'assets/icons/png/home.png',
@@ -33,9 +35,6 @@ class LandingPage extends StatelessWidget {
                 position: 2,
               ),
             ],
-            onTap: (value) async {
-              landingController.setTabPosition(value);
-            },
           ),
         ),
         body: TabBarView(children: [

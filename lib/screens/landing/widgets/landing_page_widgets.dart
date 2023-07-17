@@ -1,3 +1,4 @@
+import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:water_reminder_app/common_widgets.dart';
@@ -5,7 +6,7 @@ import 'package:water_reminder_app/screens/landing/controller/landing_controller
 
 final LandingController landingController = Get.find();
 
-Widget buildAppBarLandingPage(
+Widget buildAppBarTabBar(
     {required List<Widget> tabs,
     void Function(int)? onTap,
     TabController? controller}) {
@@ -14,12 +15,12 @@ Widget buildAppBarLandingPage(
     backgroundColor: Colors.blue,
     bottom: TabBar(
       controller: controller,
-      labelColor: Colors.white,
-      indicatorColor: Colors.white,
-      indicatorSize: TabBarIndicatorSize.tab,
-      unselectedLabelColor: Colors.grey,
+      indicator: BubbleTabIndicator(
+        indicatorRadius: 5,
+        indicatorHeight: 30.0,
+        indicatorColor: Colors.blue[700]!,
+      ),
       tabs: tabs,
-      onTap: onTap,
     ),
   );
 }
@@ -38,23 +39,13 @@ Widget tabPlaceholder({
         SizedBox(
           width: 18,
           height: 18,
-          child: Obx(
-            () => Image.asset(
-              assetName,
-              color: landingController.tabPosition == position
-                  ? Colors.white
-                  : Colors.white.withOpacity(0.5),
-            ),
+          child: Image.asset(
+            assetName,
+            color: Colors.white,
           ),
         ),
-        Obx(
-          () => reusableText(
-              text: text,
-              textColor: landingController.tabPosition == position
-                  ? Colors.white
-                  : Colors.white.withOpacity(0.5),
-              fontWeight: FontWeight.bold),
-        )
+        reusableText(
+            text: text, textColor: Colors.white, fontWeight: FontWeight.bold),
       ],
     ),
   );
