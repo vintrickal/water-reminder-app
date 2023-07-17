@@ -50,7 +50,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     quarterTurns: 3,
                     child: Container(
                         margin: EdgeInsets.only(left: 10, top: 5, bottom: 5),
-                        child: reusableText(text: 'Amount')),
+                        child: reusableText(text: 'Amount (ml)')),
                   ),
                 ),
                 Container(

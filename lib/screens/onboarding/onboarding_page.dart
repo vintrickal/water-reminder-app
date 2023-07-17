@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:water_reminder_app/common_widgets.dart';
 import 'package:water_reminder_app/main_controller.dart';
 import 'package:water_reminder_app/screens/onboarding/controller/onboarding_controller.dart';
 import 'package:water_reminder_app/screens/onboarding/widgets/onboarding_page_widgets.dart';

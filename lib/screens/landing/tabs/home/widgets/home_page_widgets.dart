@@ -257,6 +257,7 @@ Widget buildFloatingActionButton(BuildContext context,
               InkWell(
                 onTap: () {
                   showPopupDialogCups(context);
+                  isDialOpen.value = false;
                 },
                 child: Container(
                   child: Stack(alignment: Alignment.center, children: [
@@ -304,9 +305,6 @@ Widget buildFloatingActionButton(BuildContext context,
           foregroundColor: Colors.white,
           elevation: 0,
           label: 'Switch Cup',
-          // onTap: () {
-          //   showPopupDialogCups(context);
-          // },
         ),
         SpeedDialChild(
           child: Stack(
@@ -348,16 +346,6 @@ Widget buildFloatingActionButton(BuildContext context,
           foregroundColor: Colors.white,
           elevation: 0,
           label: 'Drink Water',
-          // onTap: () {
-          //   homeController.setTimeRecord(DateTime.now());
-          //   homeController.computeWaterInTake(
-          //       passedInTake: double.parse(homeController.selectedCupCapacity),
-          //       goalInTake: 2280,
-          //       timestamp: homeController.dateTimeRecord,
-          //       selectedCup: homeController.selectedCup);
-          //   isDialOpen.value = false;
-          // },
-          // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
         ),
       ],
     ),
@@ -891,6 +879,22 @@ showPopupDialogCups(BuildContext context) {
                                     () {
                                       homeController
                                           .setSelectedCup(cups[index]);
+                                      Get.snackbar(
+                                        backgroundColor: Colors.white,
+                                        icon: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            width: 40,
+                                            height: 40,
+                                            child:
+                                                Image.asset(cups[index].path!),
+                                          ),
+                                        ),
+                                        'Switched Cup!',
+                                        'The default volume is set to ${cups[index].capacity}ml',
+                                        snackPosition: SnackPosition.TOP,
+                                      );
+                                      Navigator.pop(context);
                                     },
                                   );
                                 },
