@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:water_reminder_app/common/values/colors.dart';
@@ -21,19 +20,19 @@ Widget reusableText({
 // SizedBox
 Widget sizedBox10() {
   return SizedBox(
-    height: 10.h,
+    height: 10,
   );
 }
 
 Widget sizedBox20() {
   return SizedBox(
-    height: 20.h,
+    height: 20,
   );
 }
 
 Widget sizedBox30() {
   return SizedBox(
-    height: 30.h,
+    height: 30,
   );
 }
 

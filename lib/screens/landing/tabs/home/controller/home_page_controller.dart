@@ -104,29 +104,29 @@ class HomeController extends GetxController {
           value: getFusionId());
 
       _goal.value = document[0]['goal_intake'];
-
-      List defaultCup = await Global.storageService.getCollection(
-          collectionName: 'user', keyword: 'user_id', value: _userId.value);
-
-      var index = int.parse(defaultCup[0]['selected_cup']);
-
-      // Set the user cup
-      _selectedCup.update((val) {
-        _selectedCup.value = defaultCup[0]['selected_cup'];
-      });
-
-      // Set the user cup capacity
-      _selectedCupCapacity.update(
-        (val) {
-          _selectedCupCapacity.value = cups[index].capacity!;
-        },
-      );
-
-      // Set the user cup path
-      _selectedCupPath.update((val) {
-        _selectedCupPath.value = cups[index].path!;
-      });
     }
+    
+    List defaultCup = await Global.storageService.getCollection(
+        collectionName: 'user', keyword: 'user_id', value: _userId.value);
+
+    var index = int.parse(defaultCup[0]['selected_cup']);
+
+    // Set the user cup
+    _selectedCup.update((val) {
+      _selectedCup.value = defaultCup[0]['selected_cup'];
+    });
+
+    // Set the user cup capacity
+    _selectedCupCapacity.update(
+      (val) {
+        _selectedCupCapacity.value = cups[index].capacity!;
+      },
+    );
+
+    // Set the user cup path
+    _selectedCupPath.update((val) {
+      _selectedCupPath.value = cups[index].path!;
+    });
   }
 
   getProgressWaterInTake() {
@@ -147,13 +147,14 @@ class HomeController extends GetxController {
     required String selectedCup,
   }) async {
     try {
-      if (_percent.round() + 0.1 < 1.0) {
+      var roundedPercent = _percent.value * 100;
+      if (roundedPercent.round() < 100) {
         _begin.value = _inTake.value;
         _inTake.value = _begin.value + passedInTake;
         _end.value = _inTake.value;
-        _percent.value = (_end.value / 2280);
+        _percent.value = (_end.value / 2280) * 100;
       } else {
-        _percent.value = 1.0;
+        _percent.value = _percent.value * 100;
         _begin.value = _inTake.value;
         _inTake.value = _begin.value + passedInTake;
         _end.value = _inTake.value;
@@ -182,7 +183,7 @@ class HomeController extends GetxController {
       'past_intake': _begin.value,
       'current_intake': _end.value,
       'goal_intake': goal,
-      'percent_intake': _percent.value
+      'percent_intake': _percent.value.round()
     };
 
     // Update user water in take
@@ -198,13 +199,14 @@ class HomeController extends GetxController {
     required double pastIntake,
   }) async {
     try {
-      if (_percent + 0.1 < 1.0) {
+      var roundedPercent = _percent.value * 100;
+      if (roundedPercent.round() < 100) {
         _begin.value = _inTake.value - pastIntake;
         _inTake.value = _begin.value + passedInTake;
         _end.value = _inTake.value;
-        _percent.value = (_end.value / 2280);
+        _percent.value = (_end.value / 2280) * 100;
       } else {
-        _percent.value = 1.0;
+        _percent.value = _percent.value * 100;
         _begin.value = _inTake.value;
         _inTake.value = _begin.value + passedInTake;
         _end.value = _inTake.value;
@@ -266,7 +268,7 @@ class HomeController extends GetxController {
     _end.update((val) {
       _end.value = currentIntake;
     });
-    var percent = currentIntake == 0 ? 0 : currentIntake / _goal.value;
+    var percent = currentIntake == 0 ? 0 : currentIntake / _goal.value * 100;
 
     Map<String, dynamic> items = {
       'current_intake': currentIntake,

@@ -35,8 +35,9 @@ class FirebaseApi {
   void handleMessage(RemoteMessage? message) {
     if (message == null) return;
 
-    landingController.setTabPosition(0);
-    Get.to(() => LandingPage(), arguments: {'index': 0});
+    // landingController.setTabPosition(0);
+    // Get.to(() => LandingPage(), arguments: {'index': 0});
+    Get.to(() => LandingPage());
   }
 
   Future initPushNotifications() async {

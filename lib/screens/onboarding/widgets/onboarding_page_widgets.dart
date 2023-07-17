@@ -1,21 +1,24 @@
 import 'package:easy_stepper/easy_stepper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
+import 'package:get/get.dart';
 import 'package:water_reminder_app/common/values/colors.dart';
 import 'package:water_reminder_app/common_widgets.dart';
+import 'package:water_reminder_app/screens/onboarding/controller/onboarding_controller.dart';
 import 'package:wheel_chooser/wheel_chooser.dart';
 
+final onboardingController = Get.put(OnboardingController());
+
 Widget buildNextButton(String buttonName, void Function()? func) {
-  return GestureDetector(
+  return InkWell(
     onTap: func,
     child: Container(
-      width: 75.w,
-      height: 40.h,
+      width: 75,
+      height: 40,
       decoration: BoxDecoration(
           color: Colors.blue,
-          borderRadius: BorderRadius.circular(15.w),
+          borderRadius: BorderRadius.circular(15),
           border: Border.all(color: AppColors.primaryFourthElementText),
           boxShadow: [
             BoxShadow(
@@ -28,7 +31,7 @@ Widget buildNextButton(String buttonName, void Function()? func) {
           child: Text(
         buttonName,
         style: TextStyle(
-            fontSize: 16.sp,
+            fontSize: 16,
             fontWeight: FontWeight.normal,
             color: AppColors.primaryBackground),
       )),
@@ -43,8 +46,8 @@ EasyStep easyStep({String? svgAsset, String? text}) {
       child: Opacity(
         opacity: 1,
         child: Container(
-          width: 40.w,
-          height: 40.h,
+          width: 40,
+          height: 40,
           child: SvgPicture.asset(
             svgAsset!,
             colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
@@ -101,24 +104,24 @@ Widget avatarContainer({String? imageAsset, Color? stateColor}) {
       borderRadius: BorderRadius.circular(10),
       color: stateColor,
     ),
-    width: 100.w,
-    height: 100.h,
+    width: 100,
+    height: 100,
     child: Image.asset(imageAsset!),
   );
 }
 
 Widget icon({String? imageAsset}) {
   return SizedBox(
-    width: 150.w,
-    height: 180.h,
+    width: 150,
+    height: 180,
     child: Image.asset(imageAsset!),
   );
 }
 
 Widget iconMoon({String? imageAsset}) {
   return SizedBox(
-    width: 120.w,
-    height: 150.h,
+    width: 120,
+    height: 150,
     child: Image.asset(imageAsset!),
   );
 }
@@ -126,12 +129,12 @@ Widget iconMoon({String? imageAsset}) {
 Widget bottomNavigationOptions(
     {void Function()? onTap, void Function()? func}) {
   return Container(
-    margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 40.h),
+    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        GestureDetector(
+        InkWell(
           onTap: onTap,
           child: const CircleAvatar(
               radius: 20,
@@ -163,7 +166,7 @@ Widget buildGenderOption({
           textColor: AppColors.primaryText,
           fontWeight: FontWeight.bold),
       Container(
-        margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 80.h),
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 80),
         child: Row(
           children: [
             icon(imageAsset: 'assets/icons/png/gender_sign.png'),
@@ -221,12 +224,12 @@ Widget buildWeightOption(
                   child: WheelChooser.integer(
                     initValue: initValue,
                     selectTextStyle: TextStyle(
-                      fontSize: 15.sp,
+                      fontSize: 15,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                     unSelectTextStyle:
-                        TextStyle(fontSize: 15.sp, color: Colors.grey.shade500),
+                        TextStyle(fontSize: 15, color: Colors.grey.shade500),
                     onValueChanged: onValueChangedWeight,
                     maxValue: 500,
                     minValue: 30,

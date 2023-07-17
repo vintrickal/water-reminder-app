@@ -1,5 +1,10 @@
+import 'dart:ui';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:water_reminder_app/common/models/bar_data_model.dart';
 import 'package:water_reminder_app/common/models/cup_model.dart';
 
+// Types of cups
 List<CupModel> cups = [
   CupModel(
       id: '0',
@@ -31,4 +36,96 @@ List<CupModel> cups = [
       type: '500ml',
       capacity: '500',
       path: 'assets/icons/png/500ml.png'),
+];
+
+List<String> weekName = [
+  'Sun',
+  'Mon',
+  'Tue',
+  'Wed',
+  'Thur',
+  'Fri',
+  'Sat',
+];
+
+// #1 Store the data from firebase to BarDataModel
+List<BarDataModel> barData = [
+  BarDataModel(
+    id: 0,
+    name: 'Mon',
+    y: 15,
+    color: Color(0xff19bfff),
+  ),
+  BarDataModel(
+    id: 1,
+    name: 'Tue',
+    y: 11,
+    color: Color(0xffff4d94),
+  ),
+  BarDataModel(
+    id: 2,
+    name: 'Wed',
+    y: 14,
+    color: Color(0xff2bdb90),
+  ),
+];
+
+// #2 Distribute the model data and store it in a datatype List<BarChartGroupData>
+List<BarChartGroupData> barChartList = [
+  BarChartGroupData(
+    x: 0,
+    barRods: [
+      BarChartRodData(
+        color: Colors.blue[400],
+        toY: 10.toDouble(),
+        width: 45,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(5),
+          topRight: Radius.circular(5),
+        ),
+      ),
+    ],
+  ),
+  BarChartGroupData(
+    x: 1,
+    barRods: [
+      BarChartRodData(
+        color: Colors.blue[400],
+        toY: 15.toDouble(),
+        width: 45,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(5),
+          topRight: Radius.circular(5),
+        ),
+      ),
+    ],
+  ),
+  BarChartGroupData(
+    x: 2,
+    barRods: [
+      BarChartRodData(
+        color: Colors.blue[400],
+        toY: 20.toDouble(),
+        width: 45,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(5),
+          topRight: Radius.circular(5),
+        ),
+      ),
+    ],
+  ),
+  BarChartGroupData(
+    x: 3,
+    barRods: [
+      BarChartRodData(
+        color: Colors.blue[400],
+        toY: 30.toDouble(),
+        width: 45,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(5),
+          topRight: Radius.circular(5),
+        ),
+      ),
+    ],
+  )
 ];

@@ -3,13 +3,33 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:water_reminder_app/common/values/colors.dart';
 import 'package:water_reminder_app/common_widgets.dart';
-import 'package:water_reminder_app/screens/onboarding/onboarding_page.dart';
+import 'package:water_reminder_app/screens/landing/landing_page.dart';
+import 'package:water_reminder_app/screens/onboarding/controller/onboarding_controller.dart';
 import 'package:water_reminder_app/screens/splash/widgets/splash_page_widgets.dart';
 
-class SplashPage extends StatelessWidget {
-  const SplashPage({super.key});
+class EndOnboardingScreen extends StatefulWidget {
+  const EndOnboardingScreen({super.key});
 
-  static const route = '/splash_screen';
+  static const route = '/end_onboarding_screen';
+
+  @override
+  State<EndOnboardingScreen> createState() => _EndOnboardingScreenState();
+}
+
+class _EndOnboardingScreenState extends State<EndOnboardingScreen> {
+  final onboardingController = Get.put(OnboardingController());
+
+  bool isShown = false;
+  @override
+  void initState() {
+    _processOnboarding();
+    super.initState();
+  }
+
+  _processOnboarding() async {
+    await onboardingController.anonymousRegistered();
+    Get.to(() => LandingPage());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +43,11 @@ class SplashPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: buildImage('assets/icons/png/water_happy.png'),
+              child: buildImage('assets/icons/png/heart.png'),
             ),
             sizedBox30(),
             Text(
-              'Hi,',
+              'Thank you!',
               style: GoogleFonts.poppins(
                 color: AppColors.primary_bg,
                 fontSize: 24,
@@ -35,7 +55,7 @@ class SplashPage extends StatelessWidget {
               ),
             ),
             Text(
-              'I\'m your personal hydration buddy',
+              'Processing information...',
               style: GoogleFonts.poppins(
                 color: AppColors.primary_bg,
                 fontSize: 24,
@@ -44,7 +64,7 @@ class SplashPage extends StatelessWidget {
             ),
             sizedBox20(),
             Text(
-              'In order to provide hydration advice. I need to know some basic information. Don\'t worry, I\'m good with secrets',
+              'Hold-on while I setup your profile.',
               style: GoogleFonts.poppins(
                 color: AppColors.primarySecondaryElementText,
                 fontSize: 14,
@@ -52,9 +72,11 @@ class SplashPage extends StatelessWidget {
               ),
             ),
             sizedBox20(),
-            buildButton('START HYDRATING', () {
-              Get.to(() => OnboardingPage());
-            }),
+            // isShown
+            //     ? buildButton('GO TO DASHBOARD', () {
+
+            //       })
+            //     : Container(),
           ],
         ),
       ),

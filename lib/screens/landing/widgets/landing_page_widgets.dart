@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:water_reminder_app/common_widgets.dart';
 import 'package:water_reminder_app/screens/landing/controller/landing_controller.dart';
@@ -37,8 +36,8 @@ Widget tabPlaceholder({
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         SizedBox(
-          width: 18.w,
-          height: 18.h,
+          width: 18,
+          height: 18,
           child: Obx(
             () => Image.asset(
               assetName,

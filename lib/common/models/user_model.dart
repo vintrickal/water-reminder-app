@@ -11,16 +11,19 @@ class UserModel {
   int? weight;
   String? wake_up_time;
   String? sleep_time;
+  String? selected_cup;
 
-  UserModel(
-      {this.id,
-      this.device_token,
-      this.user_id,
-      this.status,
-      this.gender,
-      this.weight,
-      this.wake_up_time,
-      this.sleep_time});
+  UserModel({
+    this.id,
+    this.device_token,
+    this.user_id,
+    this.status,
+    this.gender,
+    this.weight,
+    this.wake_up_time,
+    this.sleep_time,
+    this.selected_cup,
+  });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class OnboardingControllerGetX extends GetxController {
@@ -139,7 +138,7 @@ class OnboardingControllerGetX extends GetxController {
   SnackbarController _skipAttemptSnackBar() {
     return Get.snackbar("Why are you skipping?", "I'm sad now",
         icon: Container(
-          margin: EdgeInsets.only(left: 10.w),
+          margin: EdgeInsets.only(left: 10),
           child: Image.asset(
             'assets/icons/png/sad.png',
           ),
@@ -154,7 +153,7 @@ class OnboardingControllerGetX extends GetxController {
   SnackbarController _appreciationSnackBar() {
     return Get.snackbar("Thank you!", "It's still a work in progress!",
         icon: Container(
-          margin: EdgeInsets.only(left: 10.w),
+          margin: EdgeInsets.only(left: 10),
           child: Image.asset(
             'assets/icons/png/heart.png',
           ),

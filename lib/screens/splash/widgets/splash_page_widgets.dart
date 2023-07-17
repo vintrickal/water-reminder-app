@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:water_reminder_app/common/values/colors.dart';
 
 Widget buildButton(String buttonName, void Function()? func) {
   return GestureDetector(
     onTap: func,
     child: Container(
-      width: 325.w,
-      height: 50.h,
-      margin: EdgeInsets.only(top: 20.h),
+      width: 325,
+      height: 50,
+      margin: EdgeInsets.only(top: 20),
       decoration: BoxDecoration(
           color: Colors.blue,
-          borderRadius: BorderRadius.circular(15.w),
+          borderRadius: BorderRadius.circular(15),
           border: Border.all(color: AppColors.primaryFourthElementText),
           boxShadow: [
             BoxShadow(
@@ -24,7 +23,7 @@ Widget buildButton(String buttonName, void Function()? func) {
           child: Text(
         buttonName,
         style: TextStyle(
-            fontSize: 16.sp,
+            fontSize: 16,
             fontWeight: FontWeight.normal,
             color: AppColors.primaryBackground),
       )),
@@ -34,8 +33,8 @@ Widget buildButton(String buttonName, void Function()? func) {
 
 Widget buildImage(String assetName) {
   return SizedBox(
-    width: 200.w,
-    height: 200.h,
+    width: 200,
+    height: 200,
     child: Image.asset(assetName),
   );
 }

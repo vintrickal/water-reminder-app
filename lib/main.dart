@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:water_reminder_app/global.dart';
 import 'package:water_reminder_app/main_controller.dart';
@@ -33,27 +33,23 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(360, 690),
-      minTextAdapt: true,
-      builder: (BuildContext context, Widget? child) {
-        return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Water Alarm',
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-              useMaterial3: true,
-            ),
-            home: Obx(
-              () => mainController.isLoading
-                  ? CircularProgressIndicator(
-                      color: Colors.blue[400],
-                    )
-                  : mainController.didUserExist
-                      ? LandingPage()
-                      : const SplashPage(),
-            ));
-      },
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Water Alarm',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
+      home: Obx(
+        () => mainController.isLoading
+            ? Scaffold(
+                backgroundColor: Colors.white,
+              )
+            : mainController.didUserExist
+                ? LandingPage()
+                : const SplashPage(),
+      ),
+      builder: EasyLoading.init(),
     );
   }
 }

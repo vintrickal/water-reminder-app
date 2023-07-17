@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:water_reminder_app/common/models/user_model.dart';
 import 'package:water_reminder_app/global.dart';
-import 'package:water_reminder_app/screens/landing/landing_page.dart';
+import 'package:water_reminder_app/screens/end_onboarding/end_onboarding.dart';
 
 class OnboardingController extends GetxController {
   RxInt _activeStep = 0.obs;
@@ -85,7 +84,8 @@ class OnboardingController extends GetxController {
           _activeStep.value++;
         });
       } else {
-        _anonymousRegistered();
+        Get.offAll(() => EndOnboardingScreen());
+        // anonymousRegistered();
       }
     } else {
       _skipAttempt.value++;
@@ -171,7 +171,7 @@ class OnboardingController extends GetxController {
   SnackbarController _skipAttemptSnackBar() {
     return Get.snackbar("Why are you skipping?", "I'm sad now",
         icon: Container(
-          margin: EdgeInsets.only(left: 10.w),
+          margin: EdgeInsets.only(left: 10),
           child: Image.asset(
             'assets/icons/png/sad.png',
           ),
@@ -186,7 +186,7 @@ class OnboardingController extends GetxController {
   SnackbarController _appreciationSnackBar() {
     return Get.snackbar("Thank you!", "It's still a work in progress!",
         icon: Container(
-          margin: EdgeInsets.only(left: 10.w),
+          margin: EdgeInsets.only(left: 10),
           child: Image.asset(
             'assets/icons/png/heart.png',
           ),
@@ -198,7 +198,7 @@ class OnboardingController extends GetxController {
         duration: const Duration(seconds: 2));
   }
 
-  void _anonymousRegistered() async {
+  Future<void> anonymousRegistered() async {
     // Create anonymous user in firebase sign-in
     String userId = await Global.storageService.anonymousSignIn();
     // Get Firebase Device Token
@@ -215,6 +215,7 @@ class OnboardingController extends GetxController {
       model.weight = _weight.value;
       model.wake_up_time = _wakeUpTimeString.value;
       model.sleep_time = _setSleepTime.value;
+      model.selected_cup = '3';
 
       // Call the function to register anonymous user to Firebase
       Global.storageService.registerAnonymousUser(model);
@@ -233,9 +234,6 @@ class OnboardingController extends GetxController {
       // Stored it in shared pref
       await prefs.setString('user_id', userId);
       await prefs.setString('device_token', fCMToken);
-
-      // Navigate to Landing Page
-      Get.to(() => LandingPage());
     }
   }
 }

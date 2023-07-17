@@ -3,8 +3,6 @@ import 'package:countup/countup.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:get/get.dart';
@@ -27,8 +25,8 @@ Widget buildFirstReminderAvatar({
     key: ValueKey<int>(count),
     children: [
       Container(
-        width: 70.w,
-        height: 70.h,
+        width: 70,
+        height: 70,
         child: Image.asset(assetName),
       ),
       ChatBubble(
@@ -55,8 +53,8 @@ Widget buildReminderAvatar({
     key: ValueKey<int>(count),
     children: [
       Container(
-        width: 70.w,
-        height: 70.h,
+        width: 70,
+        height: 70,
         child: Image.asset(assetName),
       ),
       ChatBubble(
@@ -68,9 +66,9 @@ Widget buildReminderAvatar({
             maxWidth: 256,
           ),
           child: Padding(
-            padding: EdgeInsets.only(left: 8.w),
+            padding: EdgeInsets.only(left: 8),
             child: reusableText(
-                text: quote, fontSize: 13.sp, textColor: Colors.white),
+                text: quote, fontSize: 13, textColor: Colors.white),
           ),
         ),
       )
@@ -142,7 +140,7 @@ Widget buildRowProgress({
           animation: true,
           animationDuration: 500,
           lineWidth: 10.0,
-          percent: percent,
+          percent: percent / 100 > 1.0 ? 1 : percent / 100,
           center: CircleAvatar(
             radius: 35,
             backgroundColor: Colors.white,
@@ -151,14 +149,14 @@ Widget buildRowProgress({
               children: [
                 Countup(
                   begin: 0,
-                  end: percent * 100,
+                  end: percent / 100 > 1.0 ? 100 : percent,
                   duration: Duration(milliseconds: 500),
                   style: GoogleFonts.poppins(
                       color: Colors.blue,
-                      fontSize: 24.sp,
+                      fontSize: 24,
                       fontWeight: FontWeight.normal),
                 ),
-                reusableText(text: '%', textColor: Colors.blue, fontSize: 24.sp)
+                reusableText(text: '%', textColor: Colors.blue, fontSize: 24)
               ],
             ),
           ),
@@ -184,7 +182,7 @@ Widget buildRowProgress({
                     duration: Duration(milliseconds: 500),
                     style: GoogleFonts.poppins(
                         color: AppColors.cardBgColor,
-                        fontSize: 15.sp,
+                        fontSize: 15,
                         fontWeight: FontWeight.normal),
                   ),
                   Container(
@@ -270,8 +268,8 @@ Widget buildFloatingActionButton(BuildContext context,
                                     'assets/icons/png/500ml.png' ||
                                 homeController.selectedCupPath ==
                                     'assets/icons/png/200ml.png'
-                            ? 50.w
-                            : 35.w,
+                            ? 50
+                            : 35,
                         height:
                             homeController.selectedCupPath ==
                                         'assets/icons/png/300ml.png' ||
@@ -279,8 +277,8 @@ Widget buildFloatingActionButton(BuildContext context,
                                         'assets/icons/png/500ml.png' ||
                                     homeController.selectedCupPath ==
                                         'assets/icons/png/200ml.png'
-                                ? 50.w
-                                : 35.w,
+                                ? 50
+                                : 35,
                         child: Image.asset(homeController.selectedCupPath),
                       ),
                     ),
@@ -306,7 +304,9 @@ Widget buildFloatingActionButton(BuildContext context,
           foregroundColor: Colors.white,
           elevation: 0,
           label: 'Switch Cup',
-          onTap: () => showPopupDialogCups(context),
+          // onTap: () {
+          //   showPopupDialogCups(context);
+          // },
         ),
         SpeedDialChild(
           child: Stack(
@@ -328,7 +328,7 @@ Widget buildFloatingActionButton(BuildContext context,
                   child: Stack(alignment: Alignment.center, children: [
                     Icon(
                       Icons.water_drop,
-                      size: 50,
+                      size: 45,
                       color: Colors.blue,
                     ),
                     Container(
@@ -348,16 +348,16 @@ Widget buildFloatingActionButton(BuildContext context,
           foregroundColor: Colors.white,
           elevation: 0,
           label: 'Drink Water',
-          onTap: () {
-            homeController.setTimeRecord(DateTime.now());
-            homeController.computeWaterInTake(
-                passedInTake: double.parse(homeController.selectedCupCapacity),
-                goalInTake: 2280,
-                timestamp: homeController.dateTimeRecord,
-                selectedCup: homeController.selectedCup);
-            isDialOpen.value = false;
-          },
-          onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
+          // onTap: () {
+          //   homeController.setTimeRecord(DateTime.now());
+          //   homeController.computeWaterInTake(
+          //       passedInTake: double.parse(homeController.selectedCupCapacity),
+          //       goalInTake: 2280,
+          //       timestamp: homeController.dateTimeRecord,
+          //       selectedCup: homeController.selectedCup);
+          //   isDialOpen.value = false;
+          // },
+          // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
         ),
       ],
     ),
@@ -404,7 +404,7 @@ Widget timelineTile({
         dashColor: AppColors.primaryThirdElementText,
       ),
       Container(
-        height: 70.h,
+        height: 70,
         child: TimelineTile(
           alignment: TimelineAlign.manual,
           lineXY: 0.0,
@@ -424,17 +424,17 @@ Widget timelineTile({
             indicator: _indicatorIcon(assetName),
             indicatorXY: indicatorXY!,
             padding: EdgeInsets.only(
-                right: 20.w, left: 20.h, top: topPadding!, bottom: 20.h),
+                right: 20, left: 20, top: topPadding!, bottom: 20),
           ),
           axis: TimelineAxis.vertical,
           endChild: Container(
-            margin: EdgeInsets.only(right: 10.w, bottom: 1.h),
+            margin: EdgeInsets.only(right: 10, bottom: 1),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 reusableText(
                   text: time,
-                  fontSize: 13.sp,
+                  fontSize: 13,
                 ),
                 Container(
                   child: Row(
@@ -442,7 +442,7 @@ Widget timelineTile({
                     children: [
                       reusableText(
                         text: inTake,
-                        fontSize: 13.sp,
+                        fontSize: 13,
                       ), // Intake Value String
                       PopupMenuButton<OptionItem>(
                         initialValue: selectedMenu,
@@ -485,11 +485,11 @@ Widget buildTodayRecordText({void Function()? onTap}) {
       child: Row(
         children: [
           Container(
-              margin: EdgeInsets.only(left: 15.w),
+              margin: EdgeInsets.only(left: 15),
               child: reusableText(
                   text: "Tracking Record",
                   fontWeight: FontWeight.bold,
-                  fontSize: 14.sp)),
+                  fontSize: 14)),
           Icon(
             Icons.add,
             size: 20,
@@ -503,7 +503,7 @@ Widget buildTodayRecordText({void Function()? onTap}) {
 
 Widget buildTimelineTracker({Widget? streamBuilder}) {
   return Container(
-      margin: EdgeInsets.only(top: 10.w, left: 10.w, right: 10.w, bottom: 10.w),
+      margin: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -539,14 +539,7 @@ Widget buildTimelineTracker({Widget? streamBuilder}) {
                     '${data['intake'].toString().substring(0, data['intake'].toString().indexOf('.'))}ml',
                 onSelected: homeController.setSelectedOption(),
                 onTapDelete: () {
-                  EasyLoading.show(
-                    indicator: loadingStaggeredDots,
-                    status: 'Retrieving data...',
-                    maskType: EasyLoadingMaskType.clear,
-                    dismissOnTap: false,
-                  );
                   homeController.onTapDelete(data);
-                  EasyLoading.dismiss();
                 },
                 onTapEdit: () {
                   homeController.onTapEdit(data, context);
@@ -630,7 +623,7 @@ Widget buildTimeOption(BuildContext context, TextEditingController controller,
                     textAlign: TextAlign.center,
                     maxLength: 4,
                     controller: controller,
-                    style: TextStyle(fontSize: 18.sp),
+                    style: TextStyle(fontSize: 18),
                     decoration: InputDecoration(
                       isDense: true,
                       contentPadding: EdgeInsets.all(0),
@@ -647,7 +640,7 @@ Widget buildTimeOption(BuildContext context, TextEditingController controller,
               ),
             ],
           ),
-          reusableText(text: 'ml', textColor: Colors.black, fontSize: 18.sp)
+          reusableText(text: 'ml', textColor: Colors.black, fontSize: 18)
         ]),
       )
     ],
