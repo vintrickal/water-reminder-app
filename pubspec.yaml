@@ -61,6 +61,7 @@ dependencies:
   fl_chart: ^0.63.0
   toggle_switch: ^2.1.0
   bubble_tab_indicator: ^0.1.6
+  flutter_xlider: ^3.5.0
 
 dev_dependencies:
   flutter_test:

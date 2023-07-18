@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:water_reminder_app/common/values/colors.dart';
 import 'package:water_reminder_app/common_widgets.dart';
+import 'package:water_reminder_app/screens/landing/tabs/settings/widgets/settings_page_widgets.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -11,9 +13,16 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  double rating = 2280;
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.scaffoldBG,
       body: SingleChildScrollView(
           child: Container(
         margin: EdgeInsets.only(left: 16, bottom: 30),
@@ -21,10 +30,22 @@ class _SettingsPageState extends State<SettingsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             sizedBox20(),
-            reusableText(
-              text: 'Reminder settings',
-              textColor: AppColors.primarySecondaryElementText,
-              fontSize: 14,
+            Container(
+              margin: EdgeInsets.only(right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  reusableText(
+                    text: 'Reminder settings',
+                    textColor: AppColors.primarySecondaryElementText,
+                    fontSize: 14,
+                  ),
+                  reusableText(
+                      text: '*All changes are auto saved',
+                      textColor: Colors.red,
+                      fontSize: 10)
+                ],
+              ),
             ),
             sizedBox10(),
             Container(
@@ -77,21 +98,34 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             sizedBox30(),
-            Container(
-              margin: EdgeInsets.only(right: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  reusableText(
-                    text: 'Intake goal',
-                    textColor: Colors.black,
-                    fontSize: 12,
-                  ),
-                  reusableText(
-                      text: '2280 ml',
-                      textColor: Colors.blue[400]!,
-                      fontWeight: FontWeight.bold),
-                ],
+            InkWell(
+              onTap: () {
+                showPopupDialogIntakeGoalSlider(context,
+                    onDragging: (handlerIndex, lowerValue, upperValue) {
+                  settingsController.setGoalIntake(lowerValue);
+                }, onDragCompleted: (handlerIndex, lowerValue, upperValue) {
+                  settingsController.updateIntakeGoal();
+                });
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    reusableText(
+                      text: 'Intake goal',
+                      textColor: Colors.black,
+                      fontSize: 12,
+                    ),
+                    Obx(
+                      () => reusableText(
+                          text:
+                              '${settingsController.rating.round().toString()}ml',
+                          textColor: Colors.blue[400]!,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
               ),
             ),
             sizedBox30(),

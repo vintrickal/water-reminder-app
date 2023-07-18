@@ -29,6 +29,7 @@ class HomeController extends GetxController {
   RxString _selectedCupCapacity = '200'.obs;
   RxString _selectedCupPath = 'assets/icons/png/200ml.png'.obs;
 
+
   RxInt _dateTimeRecord = 0.obs;
   var _waterInTakeStream;
   var _userWaterInTakeStream;
@@ -105,7 +106,7 @@ class HomeController extends GetxController {
 
       _goal.value = document[0]['goal_intake'];
     }
-    
+
     List defaultCup = await Global.storageService.getCollection(
         collectionName: 'user', keyword: 'user_id', value: _userId.value);
 
