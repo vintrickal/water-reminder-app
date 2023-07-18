@@ -163,4 +163,13 @@ class StorageService {
           (value) => print('DocumentSnapshot successfully updated!'),
         );
   }
+
+  Future<void> updateUserInfomation(
+      String id, Map<String, dynamic> userInformation) async {
+    final ref = await FirebaseFirestore.instance.collection('user');
+
+    ref.doc(id).update(userInformation).then(
+          (value) => print('DocumentSnapshot successfully updated!'),
+        );
+  }
 }

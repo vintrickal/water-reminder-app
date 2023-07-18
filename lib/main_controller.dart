@@ -7,11 +7,13 @@ class MainController extends GetxController {
   RxString _userId = ''.obs;
   RxString _deviceToken = ''.obs;
   RxBool _isLoading = false.obs;
+  RxList _mainUserList = [].obs;
 
   get didUserExist => _didUserExist.value;
   get userId => _userId.value;
   get deviceToken => _deviceToken.value;
   get isLoading => _isLoading.value;
+  get mainUserList => _mainUserList;
 
   getSharedPref() async {
     _isLoading.update((val) {
@@ -39,6 +41,10 @@ class MainController extends GetxController {
           _deviceToken.value = fCMToken;
         });
       }
+      var tempList = await Global.storageService.getCollection(
+          collectionName: 'user', keyword: 'user_id', value: userId);
+
+      _mainUserList = RxList(tempList);
 
       // Store the data to a getx variable
       _userId.update((val) {

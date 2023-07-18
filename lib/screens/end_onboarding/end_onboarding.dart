@@ -28,7 +28,6 @@ class _EndOnboardingScreenState extends State<EndOnboardingScreen> {
 
   _processOnboarding() async {
     await onboardingController.anonymousRegistered();
-    Get.to(() => LandingPage());
   }
 
   @override
@@ -50,33 +49,41 @@ class _EndOnboardingScreenState extends State<EndOnboardingScreen> {
               'Thank you!',
               style: GoogleFonts.poppins(
                 color: AppColors.primary_bg,
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.normal,
               ),
             ),
+            // sizedBox10(),
             Text(
-              'Processing information...',
+              'Onboarding Complete.',
               style: GoogleFonts.poppins(
                 color: AppColors.primary_bg,
-                fontSize: 24,
+                fontSize: 18,
                 fontWeight: FontWeight.normal,
               ),
             ),
             sizedBox20(),
-            Text(
-              'Hold-on while I setup your profile.',
-              style: GoogleFonts.poppins(
-                color: AppColors.primarySecondaryElementText,
-                fontSize: 14,
-                fontWeight: FontWeight.normal,
-              ),
+            Obx(
+              () => reusableText(
+                  text: onboardingController.recommendedWaterIntake == 0
+                      ? 'Calculating the water goal intake...'
+                      : 'Your goal water intake is ${onboardingController.recommendedWaterIntake.toString()}ml',
+                  fontSize: 16),
             ),
             sizedBox20(),
-            // isShown
-            //     ? buildButton('GO TO DASHBOARD', () {
-
-            //       })
-            //     : Container(),
+            Obx(
+              () => buildButton(
+                onboardingController.recommendedWaterIntake == 0
+                    ? 'Processing'
+                    : 'Proceed',
+                () {
+                  if (onboardingController.recommendedWaterIntake != 0) {
+                    Future.delayed(Duration(seconds: 5));
+                    Get.to(() => LandingPage());
+                  }
+                },
+              ),
+            )
           ],
         ),
       ),

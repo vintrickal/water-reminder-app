@@ -12,6 +12,10 @@ class UserModel {
   String? wake_up_time;
   String? sleep_time;
   String? selected_cup;
+  double? user_goal_intake;
+  double? recommended_goal_intake;
+  String? display_mode;
+  bool? hideTips;
 
   UserModel({
     this.id,
@@ -23,6 +27,10 @@ class UserModel {
     this.wake_up_time,
     this.sleep_time,
     this.selected_cup,
+    this.user_goal_intake,
+    this.recommended_goal_intake,
+    this.display_mode,
+    this.hideTips,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>

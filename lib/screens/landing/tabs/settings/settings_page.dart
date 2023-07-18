@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:water_reminder_app/common/values/colors.dart';
 import 'package:water_reminder_app/common_widgets.dart';
+import 'package:water_reminder_app/screens/landing/tabs/settings/controller/settings_page_controller.dart';
 import 'package:water_reminder_app/screens/landing/tabs/settings/widgets/settings_page_widgets.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -13,10 +14,16 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  double rating = 2280;
+  final settingsController = Get.put(SettingsController());
+
   @override
   void initState() {
+    _initializeData();
     super.initState();
+  }
+
+  _initializeData() {
+    settingsController.initializedData();
   }
 
   @override

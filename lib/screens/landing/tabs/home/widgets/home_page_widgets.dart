@@ -169,7 +169,7 @@ Widget buildRowProgress({
           children: [
             Container(
               child: reusableText(
-                text: 'Today You Drank:',
+                text: 'Today you drank:',
                 fontSize: 18,
               ),
             ),
@@ -199,7 +199,7 @@ Widget buildRowProgress({
             ),
             Container(
               child: reusableText(
-                text: 'Goal intake:',
+                text: 'Daily goal intake:',
                 fontSize: 18,
               ),
             ),
@@ -208,7 +208,7 @@ Widget buildRowProgress({
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   reusableText(
-                      text: '2280ml',
+                      text: '${goal.round()} ml',
                       fontSize: 15,
                       textColor: AppColors.cardBgColor),
                 ],
@@ -316,7 +316,6 @@ Widget buildFloatingActionButton(BuildContext context,
                   homeController.computeWaterInTake(
                       passedInTake:
                           double.parse(homeController.selectedCupCapacity),
-                      goalInTake: 2280,
                       timestamp: homeController.dateTimeRecord,
                       selectedCup: homeController.selectedCup);
                   isDialOpen.value = false;
@@ -701,7 +700,6 @@ showPopupDialog(BuildContext context) {
 
                               homeController.computeWaterInTake(
                                   passedInTake: value,
-                                  goalInTake: 2280,
                                   timestamp: homeController.dateTimeRecord,
                                   selectedCup: homeController.selectedCup);
 
@@ -794,7 +792,6 @@ showPopupDialogEdit(BuildContext context, Map<String, dynamic> map) {
 
                               homeController.updateComputationWaterInTake(
                                   passedInTake: value,
-                                  goalInTake: 2280,
                                   timestamp: homeController.dateTimeRecord,
                                   id: map['id'],
                                   pastIntake: map['intake']);

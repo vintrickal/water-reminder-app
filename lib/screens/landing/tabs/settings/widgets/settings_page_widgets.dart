@@ -6,7 +6,8 @@ import 'package:water_reminder_app/common/values/colors.dart';
 import 'package:water_reminder_app/common_widgets.dart';
 import 'package:water_reminder_app/screens/landing/tabs/settings/controller/settings_page_controller.dart';
 
-final settingsController = Get.put(SettingsController());
+// final settingsController = Get.put(SettingsController());
+SettingsController settingsController = Get.find();
 
 showPopupDialogIntakeGoalSlider(
   BuildContext context, {
@@ -36,18 +37,38 @@ showPopupDialogIntakeGoalSlider(
                           elevation: 0,
                           color: Colors.white,
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              reusableText(
-                                text: 'Adjust intake goal',
-                                fontSize: 14.0,
-                                textColor: Colors.black,
+                              Center(
+                                child: reusableText(
+                                  text: 'Adjust intake goal',
+                                  fontSize: 14.0,
+                                  textColor: Colors.black,
+                                ),
                               ),
                               sizedBox30(),
                               _flutterSlide(
                                 onDragging: onDragging,
                                 onDragCompleted: onDragCompleted,
                               ),
-                              reusableText(text: 'Recommended')
+                              sizedBox20(),
+                              Container(
+                                  margin: EdgeInsets.only(left: 10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      reusableText(
+                                          text: 'Legend:',
+                                          fontSize: 12,
+                                          textColor: Colors.black54),
+                                      sizedBox10(),
+                                      reusableText(
+                                          text: '| = Recommended water intake',
+                                          fontSize: 12,
+                                          textColor: Colors.black54)
+                                    ],
+                                  ))
                             ],
                           ),
                         ),
@@ -90,7 +111,8 @@ Widget _flutterSlide(
         density: 0.5, // means 50 lines, from 0 to 100 percent
         labels: [
           FlutterSliderHatchMarkLabel(
-              percent: 50, label: Text('|', style: TextStyle(fontSize: 12))),
+              percent: settingsController.percentage,
+              label: Text('|', style: TextStyle(fontSize: 12))),
         ],
       ),
     ),

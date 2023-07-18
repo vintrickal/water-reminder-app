@@ -19,6 +19,7 @@ Widget buildAppBarTabBar(
         indicatorRadius: 5,
         indicatorHeight: 30.0,
         indicatorColor: Colors.blue[700]!,
+        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       ),
       tabs: tabs,
     ),
@@ -29,8 +30,6 @@ Widget tabPlaceholder({
   required String assetName,
   required String text,
   required int position,
-  // required Color iconColor,
-  // required Color textColor
 }) {
   return Tab(
     child: Row(

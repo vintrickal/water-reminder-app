@@ -14,7 +14,7 @@ import 'package:water_reminder_app/screens/landing/tabs/home/widgets/home_page_w
 import 'package:water_reminder_app/screens/onboarding/controller/onboarding_controller.dart';
 
 class HomeController extends GetxController {
-  final mainController = Get.put(MainController());
+  MainController mainController = Get.find();
   final onboardingController = Get.put(OnboardingController());
 
   RxDouble _inTake = 0.0.obs;
@@ -29,11 +29,11 @@ class HomeController extends GetxController {
   RxString _selectedCupCapacity = '200'.obs;
   RxString _selectedCupPath = 'assets/icons/png/200ml.png'.obs;
 
-
   RxInt _dateTimeRecord = 0.obs;
   var _waterInTakeStream;
   var _userWaterInTakeStream;
   var intakeController = TextEditingController();
+  var _homeUserList = [].obs;
 
   get inTake => _inTake.value;
   get percent => _percent.value;
@@ -41,7 +41,7 @@ class HomeController extends GetxController {
   get end => _end.value;
   get goal => _goal.value;
   get waterInTakeStream => _waterInTakeStream;
-  get userWaterIntakeId => _userWaterIntakeId;
+  get userWaterIntakeId => _userWaterIntakeId.value;
   get userWaterInTakeStream => _userWaterInTakeStream;
   get userId => _userId.value;
   get dateTimeRecord => _dateTimeRecord.value;
@@ -49,8 +49,9 @@ class HomeController extends GetxController {
   get selectedCup => _selectedCup.value;
   get selectedCupCapacity => _selectedCupCapacity.value;
   get selectedCupPath => _selectedCupPath.value;
+  get homeUserList => _homeUserList;
 
-  setUserId() {
+  setUserId() async {
     if (mainController.userId != '') {
       _userId.update((val) {
         _userId.value = mainController.userId;
@@ -68,6 +69,11 @@ class HomeController extends GetxController {
         _deviceToken.value = onboardingController.deviceToken;
       });
     }
+
+    var tempList = await Global.storageService.getCollection(
+        collectionName: 'user', keyword: 'user_id', value: _userId.value);
+
+    _homeUserList = RxList(tempList);
   }
 
   initiateData() async {
@@ -86,11 +92,13 @@ class HomeController extends GetxController {
       model.user_id = _userId.value;
       model.past_intake = 0;
       model.current_intake = 0;
-      model.goal_intake = 2280;
+      model.goal_intake =
+          double.parse(onboardingController.recommendedWaterIntake.toString());
       model.percent_intake = 0;
 
       _goal.update((val) {
-        _goal.value = 2280;
+        _goal.value = double.parse(
+            onboardingController.recommendedWaterIntake.toString());
       });
 
       Map<String, dynamic> userWaterIntakeItems = model.toJson();
@@ -143,7 +151,6 @@ class HomeController extends GetxController {
 
   void computeWaterInTake({
     required double passedInTake,
-    required double goalInTake,
     required int timestamp,
     required String selectedCup,
   }) async {
@@ -153,7 +160,8 @@ class HomeController extends GetxController {
         _begin.value = _inTake.value;
         _inTake.value = _begin.value + passedInTake;
         _end.value = _inTake.value;
-        _percent.value = (_end.value / 2280) * 100;
+        _percent.value =
+            (_end.value / _homeUserList[0]['user_goal_intake']) * 100;
       } else {
         _percent.value = _percent.value * 100;
         _begin.value = _inTake.value;
@@ -176,7 +184,7 @@ class HomeController extends GetxController {
 
     Global.storageService.addUserIntake('water-intake', items);
 
-    updateUserWaterIntakeGoal(goal: goalInTake);
+    updateUserWaterIntakeGoal(goal: _homeUserList[0]['user_goal_intake']);
   }
 
   Future<void> updateUserWaterIntakeGoal({required double goal}) async {
@@ -194,7 +202,6 @@ class HomeController extends GetxController {
 
   void updateComputationWaterInTake({
     required double passedInTake,
-    required double goalInTake,
     required int timestamp,
     required String id,
     required double pastIntake,
@@ -205,7 +212,8 @@ class HomeController extends GetxController {
         _begin.value = _inTake.value - pastIntake;
         _inTake.value = _begin.value + passedInTake;
         _end.value = _inTake.value;
-        _percent.value = (_end.value / 2280) * 100;
+        _percent.value =
+            (_end.value / _homeUserList[0]['user_goal_intake']) * 100;
       } else {
         _percent.value = _percent.value * 100;
         _begin.value = _inTake.value;
@@ -225,7 +233,7 @@ class HomeController extends GetxController {
     Global.storageService.updateWaterIntake(id, items);
 
     // Update user water intake
-    updateUserWaterIntakeGoal(goal: goalInTake);
+    updateUserWaterIntakeGoal(goal: _homeUserList[0]['user_goal_intake']);
   }
 
   String getFusionId() {
@@ -251,7 +259,14 @@ class HomeController extends GetxController {
 
   setVariables({required double begin, required String documentId}) {
     _inTake.value = begin;
-    _percent.value = (_inTake.value / 2280);
+
+    if (_homeUserList[0]['user_goal_intake'] != []) {
+      _percent.value = (_inTake.value / _homeUserList[0]['user_goal_intake']);
+    } else if (mainController.mainUserList[0]['user_goal_intake'] != []) {
+      _percent.value =
+          (_inTake.value / mainController.mainUserList[0]['user_goal_intake']);
+    }
+
     _userWaterIntakeId.value = documentId;
   }
 

@@ -18,6 +18,7 @@ class OnboardingController extends GetxController {
   RxString _setSleepTime = '_ _'.obs;
   RxString _userId = ''.obs;
   RxString _deviceToken = ''.obs;
+  RxInt _recommendedWaterIntake = 0.obs;
 
   get activeStep => _activeStep.value;
   get gender => _gender.value;
@@ -30,6 +31,7 @@ class OnboardingController extends GetxController {
   get sleepTimeString => _setSleepTime.value;
   get userId => _userId.value;
   get deviceToken => _deviceToken.value;
+  get recommendedWaterIntake => _recommendedWaterIntake.value;
 
   void setDefaultStep() {
     _activeStep.value = 0;
@@ -206,6 +208,11 @@ class OnboardingController extends GetxController {
 
     // Convert data to user model
     if (userId.isNotEmpty) {
+      _recommendedWaterIntake.update((val) {
+        double result = calculateWaterIntake(_weight.value);
+        _recommendedWaterIntake.value = result.toInt();
+      });
+
       UserModel model = UserModel();
       model.id = userId;
       model.device_token = fCMToken;
@@ -216,6 +223,12 @@ class OnboardingController extends GetxController {
       model.wake_up_time = _wakeUpTimeString.value;
       model.sleep_time = _setSleepTime.value;
       model.selected_cup = '3';
+      model.display_mode = 'light_mode';
+      model.hideTips = false;
+      model.user_goal_intake =
+          double.parse(_recommendedWaterIntake.value.toString());
+      model.recommended_goal_intake =
+          double.parse(_recommendedWaterIntake.value.toString());
 
       // Call the function to register anonymous user to Firebase
       Global.storageService.registerAnonymousUser(model);
@@ -235,5 +248,25 @@ class OnboardingController extends GetxController {
       await prefs.setString('user_id', userId);
       await prefs.setString('device_token', fCMToken);
     }
+  }
+
+  calculateWaterIntake(int weight) {
+    var result;
+
+    // Convert the kg weight to lbs
+    var pounds = weight * 2.2;
+
+    // Calculate the oz based on the user's weight
+    var oz = (2 / 3) * pounds;
+
+    // Convert the oz to liters
+    var liters = oz / 33.81;
+
+    // Convert liters to ml
+    var ml = liters * 1000;
+
+    result = ml;
+
+    return result;
   }
 }
