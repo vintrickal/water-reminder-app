@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 import 'package:water_reminder_app/common/values/colors.dart';
+import 'package:water_reminder_app/common/values/list.dart';
 import 'package:water_reminder_app/common_widgets.dart';
 import 'package:water_reminder_app/screens/landing/tabs/history/controller/history_page_controller.dart';
 import 'package:water_reminder_app/screens/landing/tabs/history/widgets/history_page_widgets.dart';
@@ -15,7 +18,8 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   final historyController = Get.put(HistoryController());
 
-  var barGraphUserWaterIntake;
+  var weeklyBarGraphStream;
+  var dailyBarGraphStream;
 
   @override
   void initState() {
@@ -24,9 +28,11 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   _initialData() {
-    barGraphUserWaterIntake =
-        historyController.getBarGraphDataUserWaterIntake();
-    historyController.saveBarGraphUserWaterIntake(barGraphUserWaterIntake);
+    weeklyBarGraphStream = historyController.getWeeklyBarGraph();
+    historyController.saveWeeklyBarGraph(weeklyBarGraphStream);
+
+    dailyBarGraphStream = historyController.getDailyBarGraph();
+    historyController.saveDailyBarGraph(dailyBarGraphStream);
   }
 
   @override
@@ -38,11 +44,44 @@ class _HistoryPageState extends State<HistoryPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             sizedBox30(),
-            Center(child: reusableText(text: 'July', fontSize: 15)),
+            Container(
+              margin: EdgeInsets.only(left: 34),
+              child: Obx(
+                () => reusableText(
+                  text: historyController.barGraphFilter == 0
+                      ? '${monthName[DateTime.now().month - 1]} ${DateTime.now().day.toString().padLeft(2, '0')}, ${DateTime.now().year.toString()}'
+                      : 'July',
+                  fontSize: 18,
+                  textColor: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             sizedBox20(),
             buildGraph(context),
-            sizedBox10(),
-            Center(child: reusableText(text: 'Day', fontSize: 12)),
+            sizedBox20(),
+            Obx(
+              () => Center(
+                child: reusableText(
+                    text:
+                        historyController.barGraphFilter == 0 ? 'Time' : 'Day',
+                    fontSize: 12),
+              ),
+            ),
+            sizedBox30(),
+            Center(
+              child: ToggleSwitch(
+                  activeBgColor: [Colors.blue[400]!],
+                  inactiveBgColor: Colors.black26,
+                  minWidth: 100,
+                  initialLabelIndex: historyController.barGraphFilter,
+                  totalSwitches: 3,
+                  labels: ['Daily', 'Weekly', 'Monthly'],
+                  onToggle: (index) {
+                    historyController.setBarGraphFilter(index!);
+                  },
+                  customTextStyles: [GoogleFonts.poppins()]),
+            ),
             sizedBox30(),
             Container(
               margin: EdgeInsets.only(left: 8, right: 8),
