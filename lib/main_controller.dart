@@ -25,7 +25,7 @@ class MainController extends GetxController {
 
     final String? userId = prefs.getString('user_id');
     final String? deviceToken = prefs.getString('device_token');
-    final fCMToken = await Global.storageService.generateToken();
+    // final fCMToken = await Global.storageService.generateToken();
 
     if (userId == null) {
       _didUserExist.update((val) {
@@ -33,15 +33,15 @@ class MainController extends GetxController {
       });
     } else {
       if (deviceToken != null) {
-        if (deviceToken != fCMToken) {
-          Map<String, dynamic> item = {'device_token': fCMToken};
-          Global.storageService.updateDeviceToken(id: userId, data: item);
+        // if (deviceToken != fCMToken) {
+        //   Map<String, dynamic> item = {'device_token': fCMToken};
+        //   Global.storageService.updateDeviceToken(id: userId, data: item);
 
-          // Store the new generated device token
-          _deviceToken.update((val) {
-            _deviceToken.value = fCMToken;
-          });
-        }
+        //   // Store the new generated device token
+        //   _deviceToken.update((val) {
+        //     _deviceToken.value = fCMToken;
+        //   });
+        // }
         var tempList = await Global.storageService.getCollection(
             collectionName: 'user', keyword: 'user_id', value: userId);
 

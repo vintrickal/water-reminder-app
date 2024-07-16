@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:water_reminder_app/common/models/user_model.dart';
 
 class StorageService {
-  Future<String> generateToken() async {
-    var token;
-    token = await FirebaseMessaging.instance.getToken();
-    return token;
-  }
+  // Future<String> generateToken() async {
+    // var token;
+    // token = await FirebaseMessaging.instance.getToken();
+    // return token;
+  // }
 
   Future<void> updateDeviceToken(
       {required String id, required Map<String, dynamic> data}) async {

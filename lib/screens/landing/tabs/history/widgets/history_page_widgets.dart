@@ -63,7 +63,7 @@ Widget buildDailyCalendar() {
     dayColor: Colors.blue[400],
     activeDayColor: Colors.white,
     activeBackgroundDayColor: Colors.green[500],
-    dotsColor: Color(0xFF333A47),
+    dotColor: Color(0xFF333A47),
     locale: 'en',
   );
 }
@@ -179,10 +179,11 @@ Widget monthlyBarGraph(BuildContext context) {
                     ),
                     barTouchData: BarTouchData(
                       touchTooltipData: BarTouchTooltipData(
+                        getTooltipColor: (BarChartGroupData group) =>
+                            AppColors.primarySecondaryElementText,
                         tooltipMargin: -60,
                         tooltipPadding: EdgeInsets.all(8),
                         tooltipHorizontalOffset: -65,
-                        tooltipBgColor: AppColors.primarySecondaryElementText,
                         getTooltipItem: (group, groupIndex, rod, rodIndex) {
                           historyController.setToolTip(group.x);
                           return BarTooltipItem(
@@ -293,7 +294,8 @@ Widget weeklyBarGraph(BuildContext context) {
                         tooltipMargin: -60,
                         tooltipPadding: EdgeInsets.all(8),
                         tooltipHorizontalOffset: -65,
-                        tooltipBgColor: AppColors.primarySecondaryElementText,
+                        getTooltipColor: (BarChartGroupData group) =>
+                            AppColors.primarySecondaryElementText,
                         getTooltipItem: (group, groupIndex, rod, rodIndex) {
                           historyController.setToolTip(group.x);
                           return BarTooltipItem(
@@ -405,7 +407,8 @@ Widget dailyBarGraph(BuildContext context) {
                           tooltipMargin: -60,
                           tooltipPadding: EdgeInsets.all(8),
                           tooltipHorizontalOffset: -65,
-                          tooltipBgColor: AppColors.primarySecondaryElementText,
+                          getTooltipColor: (BarChartGroupData group) =>
+                              AppColors.primarySecondaryElementText,
                           getTooltipItem: (group, groupIndex, rod, rodIndex) {
                             historyController.setToolTip(group.x);
                             return BarTooltipItem(
