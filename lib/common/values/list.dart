@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +46,21 @@ List<String> weekName = [
   'Thur',
   'Fri',
   'Sat',
+];
+
+List<String> monthName = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 // #1 Store the data from firebase to BarDataModel
@@ -130,3 +144,5 @@ List<BarChartGroupData> barChartList = [
     ],
   )
 ];
+
+final List<String> items = ['Daily', 'Weekly', 'Monthly'];

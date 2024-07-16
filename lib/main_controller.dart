@@ -32,31 +32,33 @@ class MainController extends GetxController {
         _didUserExist.value = false;
       });
     } else {
-      if (deviceToken != fCMToken) {
-        Map<String, dynamic> item = {'device_token': fCMToken};
-        Global.storageService.updateDeviceToken(id: userId, data: item);
+      if (deviceToken != null) {
+        if (deviceToken != fCMToken) {
+          Map<String, dynamic> item = {'device_token': fCMToken};
+          Global.storageService.updateDeviceToken(id: userId, data: item);
 
-        // Store the new generated device token
+          // Store the new generated device token
+          _deviceToken.update((val) {
+            _deviceToken.value = fCMToken;
+          });
+        }
+        var tempList = await Global.storageService.getCollection(
+            collectionName: 'user', keyword: 'user_id', value: userId);
+
+        _mainUserList = RxList(tempList);
+
+        // Store the data to a getx variable
+        _userId.update((val) {
+          _userId.value = userId;
+        });
         _deviceToken.update((val) {
-          _deviceToken.value = fCMToken;
+          _deviceToken.value = deviceToken!;
+        });
+
+        _didUserExist.update((val) {
+          _didUserExist.value = true;
         });
       }
-      var tempList = await Global.storageService.getCollection(
-          collectionName: 'user', keyword: 'user_id', value: userId);
-
-      _mainUserList = RxList(tempList);
-
-      // Store the data to a getx variable
-      _userId.update((val) {
-        _userId.value = userId;
-      });
-      _deviceToken.update((val) {
-        _deviceToken.value = deviceToken!;
-      });
-
-      _didUserExist.update((val) {
-        _didUserExist.value = true;
-      });
     }
     _isLoading.update((val) {
       _isLoading.value = false;

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:water_reminder_app/common/models/cup_model.dart';
+import 'package:water_reminder_app/common/models/monthly_user_water_intake_model.dart';
 import 'package:water_reminder_app/common/models/user_water_intake_model.dart';
 import 'package:water_reminder_app/common/models/water_intake_model.dart';
 import 'package:water_reminder_app/common/utils/conversion.dart';
@@ -23,11 +24,15 @@ class HomeController extends GetxController {
   RxDouble _end = 0.0.obs;
   RxDouble _goal = 0.0.obs;
   RxString _userWaterIntakeId = ''.obs;
+  RxString _monthlyUserWaterIntakeId = ''.obs;
   RxString _userId = ''.obs;
   RxString _deviceToken = ''.obs;
   RxString _selectedCup = '3'.obs;
   RxString _selectedCupCapacity = '200'.obs;
   RxString _selectedCupPath = 'assets/icons/png/200ml.png'.obs;
+  RxString _editSelectedCup = '3'.obs;
+  RxString _editSelectedCupCapacity = '200'.obs;
+  RxString _editSelectedCupPath = 'assets/icons/png/200ml.png'.obs;
 
   RxInt _dateTimeRecord = 0.obs;
   var _waterInTakeStream;
@@ -49,6 +54,10 @@ class HomeController extends GetxController {
   get selectedCup => _selectedCup.value;
   get selectedCupCapacity => _selectedCupCapacity.value;
   get selectedCupPath => _selectedCupPath.value;
+  get editSelectedCup => _editSelectedCup.value;
+  get editSelectedCupCapacity => _editSelectedCupCapacity.value;
+  get editSelectedCupPath => _editSelectedCupPath.value;
+
   get homeUserList => _homeUserList;
 
   setUserId() async {
@@ -77,11 +86,11 @@ class HomeController extends GetxController {
   }
 
   initiateData() async {
-    bool isDataCreated = await Global.storageService
-        .checkIfUserWaterIntakeExists(
-            collectionName: 'user-water-intake',
-            keyword: 'fusion_id',
-            value: getFusionId());
+    //#region Data Creation
+    bool isDataCreated = await Global.storageService.checkDataExistence(
+        collectionName: 'user-water-intake',
+        keyword: 'fusion_id',
+        value: getFusionId());
 
     if (!isDataCreated) {
       UserWaterIntakeModel model =
@@ -95,6 +104,8 @@ class HomeController extends GetxController {
       model.goal_intake =
           double.parse(onboardingController.recommendedWaterIntake.toString());
       model.percent_intake = 0;
+      model.month_id =
+          '${DateTime.now().month.toDouble()}_${DateTime.now().year.toDouble()}';
 
       _goal.update((val) {
         _goal.value = double.parse(
@@ -114,7 +125,9 @@ class HomeController extends GetxController {
 
       _goal.value = document[0]['goal_intake'];
     }
+    //#endregion
 
+    //#region Cup setup
     List defaultCup = await Global.storageService.getCollection(
         collectionName: 'user', keyword: 'user_id', value: _userId.value);
 
@@ -136,6 +149,44 @@ class HomeController extends GetxController {
     _selectedCupPath.update((val) {
       _selectedCupPath.value = cups[index].path!;
     });
+
+    //#endregion
+
+    //#region Monthly user water intake
+    bool isMonthlyDataCreated = await Global.storageService
+        .checkMultipleDataExistence(
+            collectionName: 'monthly-user-water-intake',
+            keyword1: 'year',
+            value1: DateTime.now().year,
+            keyword2: 'month',
+            value2: DateTime.now().month,
+            keyword3: 'user_id',
+            value3: _userId.value);
+
+    if (!isMonthlyDataCreated) {
+      MonthlyUserWaterIntakeModel model = MonthlyUserWaterIntakeModel();
+
+      model.id = '';
+      model.month = DateTime.now().month;
+      model.water_intake = 0;
+      model.year = DateTime.now().year;
+      model.user_id = _userId.value;
+
+      Map<String, dynamic> monthlyUserWaterIntakeItems = model.toJson();
+
+      // Create document and return the document id
+      _monthlyUserWaterIntakeId.value = await Global.storageService
+          .addMonthlyUserIntakeGoal(
+              'monthly-user-water-intake', monthlyUserWaterIntakeItems);
+    } else {
+      List document = await Global.storageService.getCollection(
+          collectionName: 'monthly-user-water-intake',
+          keyword: 'month',
+          value: DateTime.now().month);
+
+      _monthlyUserWaterIntakeId.value = document[0]['id'];
+    }
+    //#endregion
   }
 
   getProgressWaterInTake() {
@@ -185,6 +236,7 @@ class HomeController extends GetxController {
     Global.storageService.addUserIntake('water-intake', items);
 
     updateUserWaterIntakeGoal(goal: _homeUserList[0]['user_goal_intake']);
+    updateMonthlyUserWaterIntake();
   }
 
   Future<void> updateUserWaterIntakeGoal({required double goal}) async {
@@ -198,6 +250,16 @@ class HomeController extends GetxController {
     // Update user water in take
     Global.storageService
         .updateUserWaterIntake(_userWaterIntakeId.value, userWaterIntakeItems);
+  }
+
+  Future<void> updateMonthlyUserWaterIntake() async {
+    Map<String, dynamic> monthlyUserWaterIntakeItems = {
+      'water_intake': _end.value,
+    };
+
+    // Update monthly user water in take
+    Global.storageService.updateMonthlyUserWaterIntake(
+        _monthlyUserWaterIntakeId.value, monthlyUserWaterIntakeItems);
   }
 
   void updateComputationWaterInTake({
@@ -306,6 +368,7 @@ class HomeController extends GetxController {
   onTapEdit(Map<String, dynamic> map, BuildContext context) {
     print('Edit option was pressed! ${map['id']}');
     homeController.setEditTextController(map['intake']);
+    homeController.setEditSelectedCup(map);
     showPopupDialogEdit(context, map);
   }
 
@@ -319,6 +382,14 @@ class HomeController extends GetxController {
     intakeController.text = intake.toString().contains('.')
         ? intake.toString().substring(0, intake.toString().indexOf('.'))
         : intake.toString();
+  }
+
+  setEditSelectedCup(Map<String, dynamic> map) {
+    _editSelectedCup.update((val) {
+      _editSelectedCup.value = map['type'];
+      _editSelectedCupCapacity = map['intake'];
+      _editSelectedCupPath.value = cups[int.parse(map['type'])].path!;
+    });
   }
 
   setSelectedCup(CupModel model) {

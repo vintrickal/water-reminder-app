@@ -12,10 +12,13 @@ import 'package:timeline_tile/timeline_tile.dart';
 import 'package:water_reminder_app/common/values/colors.dart';
 import 'package:water_reminder_app/common/values/list.dart';
 import 'package:water_reminder_app/common_widgets.dart';
+import 'package:water_reminder_app/screens/landing/tabs/history/controller/history_page_controller.dart';
 import 'package:water_reminder_app/screens/landing/tabs/home/controller/home_page_controller.dart';
 import 'package:water_reminder_app/screens/landing/tabs/home/home_page.dart';
 
 final homeController = Get.put(HomeController());
+final historyController = Get.put(HistoryController());
+
 Widget buildFirstReminderAvatar({
   required String assetName,
   required String quote,
@@ -318,6 +321,7 @@ Widget buildFloatingActionButton(BuildContext context,
                           double.parse(homeController.selectedCupCapacity),
                       timestamp: homeController.dateTimeRecord,
                       selectedCup: homeController.selectedCup);
+                  historyController.getGraphCount();
                   isDialOpen.value = false;
                 },
                 child: Container(
@@ -590,7 +594,7 @@ Widget buildTimeOption(BuildContext context, TextEditingController controller,
               SizedBox(
                 width: 45,
                 height: 45,
-                child: Image.asset(homeController.selectedCupPath),
+                child: Image.asset(homeController.editSelectedCupPath),
               ),
             ],
           ),

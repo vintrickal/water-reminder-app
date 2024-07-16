@@ -67,7 +67,7 @@ class _EndOnboardingScreenState extends State<EndOnboardingScreen> {
               () => reusableText(
                   text: onboardingController.recommendedWaterIntake == 0
                       ? 'Calculating the water goal intake...'
-                      : 'Your goal water intake is ${onboardingController.recommendedWaterIntake.toString()}ml',
+                      : 'Your water goal intake is ${onboardingController.recommendedWaterIntake.toString()}ml',
                   fontSize: 16),
             ),
             sizedBox20(),
