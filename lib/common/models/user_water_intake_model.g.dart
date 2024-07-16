@@ -16,6 +16,7 @@ UserWaterIntakeModel _$UserWaterIntakeModelFromJson(
       current_intake: (json['current_intake'] as num?)?.toDouble(),
       goal_intake: (json['goal_intake'] as num?)?.toDouble(),
       percent_intake: (json['percent_intake'] as num?)?.toDouble(),
+      month_id: json['month_id'] as String?,
       date_time: UserWaterIntakeModel._fromJson(json['date_time'] as int),
     );
 
@@ -25,6 +26,7 @@ Map<String, dynamic> _$UserWaterIntakeModelToJson(
       'id': instance.id,
       'fusion_id': instance.fusion_id,
       'user_id': instance.user_id,
+      'month_id': instance.month_id,
       'past_intake': instance.past_intake,
       'current_intake': instance.current_intake,
       'goal_intake': instance.goal_intake,

@@ -25,14 +25,14 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     homeController.setUserId();
     _initialData();
-    _getUserWaterIntake();
-    _getWaterIntake(homeController.getFusionId());
     super.initState();
   }
 
   //#region Initialization
-  _initialData() async {
-    await homeController.initiateData();
+  _initialData() {
+    homeController.initiateData();
+    _getUserWaterIntake();
+    _getWaterIntake(homeController.getFusionId());
   }
 
   _getUserWaterIntake() {

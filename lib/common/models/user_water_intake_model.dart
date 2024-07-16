@@ -6,6 +6,7 @@ class UserWaterIntakeModel {
   String? id;
   String? fusion_id;
   String? user_id;
+  String? month_id;
   double? past_intake;
   double? current_intake;
   double? goal_intake;
@@ -22,6 +23,7 @@ class UserWaterIntakeModel {
     this.current_intake,
     this.goal_intake,
     this.percent_intake,
+    this.month_id,
     required this.date_time,
   });
 

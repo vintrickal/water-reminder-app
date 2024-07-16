@@ -20,16 +20,16 @@ class StorageService {
   }
 
   // Get the document count
-  Future<int> getCollectionLength({
+  getCollectionLength({
     required String collectionName,
     required String keyword,
     required String value,
   }) async {
-    int documentCount = await FirebaseFirestore.instance
+    final QuerySnapshot qSnap = await FirebaseFirestore.instance
         .collection(collectionName)
         .where(keyword, isEqualTo: value)
-        .snapshots()
-        .length;
+        .get();
+    final int documentCount = qSnap.docs.length;
 
     return documentCount;
   }
@@ -65,6 +65,24 @@ class StorageService {
     return documentId;
   }
 
+  Future<String> addMonthlyUserIntakeGoal(
+      String collectionName, Map<String, dynamic> items) async {
+    var documentId;
+
+    await FirebaseFirestore.instance
+        .collection(collectionName)
+        .add(items)
+        .then((value) {
+      documentId = value.id;
+      FirebaseFirestore.instance
+          .collection(collectionName)
+          .doc(value.id)
+          .set({'id': value.id}, SetOptions(merge: true));
+    });
+    
+    return documentId;
+  }
+
   getWaterInTake(String referenceId) {
     var waterIntakeStream;
 
@@ -77,7 +95,7 @@ class StorageService {
     return waterIntakeStream;
   }
 
-  Future<bool> checkIfUserWaterIntakeExists(
+  Future<bool> checkDataExistence(
       {required String collectionName,
       required String keyword,
       required String value}) async {
@@ -92,11 +110,35 @@ class StorageService {
     }
   }
 
-  // Get the document count
+  Future<bool> checkMultipleDataExistence({
+    required String collectionName,
+    required String keyword1,
+    required String keyword2,
+    required String keyword3,
+    required dynamic value1,
+    required dynamic value2,
+    required dynamic value3,
+  }) async {
+    try {
+      // Get reference to Firestore collection
+      var collectionRef = FirebaseFirestore.instance.collection(collectionName);
+
+      var doc = await collectionRef
+          .where(keyword1, isEqualTo: value1)
+          .where(keyword2, isEqualTo: value2)
+          .where(keyword3, isEqualTo: value3)
+          .get();
+      return doc.docs.length != 0 ? true : false;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  // Get the document
   Future<dynamic> getCollection({
     required String collectionName,
     required String keyword,
-    required String value,
+    required dynamic value,
   }) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection(collectionName)
@@ -140,6 +182,16 @@ class StorageService {
       String id, Map<String, dynamic> userWaterIntakeItems) async {
     final ref =
         await FirebaseFirestore.instance.collection('user-water-intake');
+
+    ref.doc(id).update(userWaterIntakeItems).then(
+          (value) => print('DocumentSnapshot successfully updated!'),
+        );
+  }
+
+  Future<void> updateMonthlyUserWaterIntake(
+      String id, Map<String, dynamic> userWaterIntakeItems) async {
+    final ref = await FirebaseFirestore.instance
+        .collection('monthly-user-water-intake');
 
     ref.doc(id).update(userWaterIntakeItems).then(
           (value) => print('DocumentSnapshot successfully updated!'),
