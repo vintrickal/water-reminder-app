@@ -204,7 +204,7 @@ class OnboardingController extends GetxController {
     // Create anonymous user in firebase sign-in
     String userId = await Global.storageService.anonymousSignIn();
     // Get Firebase Device Token
-    final fCMToken = await Global.storageService.generateToken();
+    // final fCMToken = await Global.storageService.generateToken();
 
     // Convert data to user model
     if (userId.isNotEmpty) {
@@ -215,7 +215,8 @@ class OnboardingController extends GetxController {
 
       UserModel model = UserModel();
       model.id = userId;
-      model.device_token = fCMToken;
+      // model.device_token = fCMToken;
+      model.device_token = '';
       model.user_id = userId;
       model.status = 'guest';
       model.gender = _gender.value;
@@ -240,13 +241,13 @@ class OnboardingController extends GetxController {
       _userId.update((val) {
         _userId.value = userId;
       });
-      _deviceToken.update((val) {
-        _deviceToken.value = fCMToken;
-      });
+      // _deviceToken.update((val) {
+      //   _deviceToken.value = fCMToken;
+      // });
 
       // Stored it in shared pref
       await prefs.setString('user_id', userId);
-      await prefs.setString('device_token', fCMToken);
+      // await prefs.setString('device_token', fCMToken);
     }
   }
 
