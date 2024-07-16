@@ -39,4 +39,12 @@ An app for reminding user to intake water in specific time. Built with Flutter G
 
 ## Screenshots
 
+### Home
+<img src="assets/screenshots/home.png" alt="Home" width="400"/>
+
+### History
+<img src="assets/screenshots/history.png" alt="History" width="400"/>
+
+### Settings
+<img src="assets/screenshots/settings.png" alt="Settings" width="400"/>
 
