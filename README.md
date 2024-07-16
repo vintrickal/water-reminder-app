@@ -11,7 +11,7 @@ An app for reminding user to intake water in specific time. Built with Flutter G
 ## Features
 
 - **Water In-take Management:** Add, edit, and delete water in-take with ease.
-- **Statistics Tracking:** See your water in-take for a month.
+- **Statistics Tracking:** See your water in-take history.
 - **Customizable Themes:** Choose between light and dark themes.
 - **Notifications:** Get notified when your next water intake reminder is..
 
