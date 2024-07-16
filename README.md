@@ -1,16 +1,32 @@
-# water_reminder_app
+# Water Reminder App
 
-A new Flutter project.
+An app for reminding user to intake water in specific time. Built with Flutter GetX.
 
-## Getting Started
+## Table of Contents
 
-This project is a starting point for a Flutter application.
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Screenshots](#screenshots)
+- [Contributing](#contributing)
 
-A few resources to get you started if this is your first Flutter project:
+## Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Task Management:** Add, edit, and delete tasks with ease.
+- **Reminders:** Set reminders for important tasks.
+- **Customizable Themes:** Choose between light and dark themes.
+- **Notifications:** Get notified about upcoming tasks and deadlines.
+- **Synchronization:** Sync your tasks across multiple devices.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Installation
+
+### Prerequisites
+
+- Flutter SDK: [Install Flutter](https://flutter.dev/docs/get-started/install)
+
+### Steps
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/username/AwesomeApp.git
+   cd AwesomeApp
