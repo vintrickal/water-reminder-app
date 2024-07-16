@@ -6,17 +6,15 @@ An app for reminding user to intake water in specific time. Built with Flutter G
 
 - [Features](#features)
 - [Installation](#installation)
-- [Usage](#usage)
 - [Screenshots](#screenshots)
 - [Contributing](#contributing)
 
 ## Features
 
-- **Task Management:** Add, edit, and delete tasks with ease.
-- **Reminders:** Set reminders for important tasks.
+- **Water In-take Management:** Add, edit, and delete water in-take with ease.
+- **Statistics Tracking:** See your water in-take for a month.
 - **Customizable Themes:** Choose between light and dark themes.
-- **Notifications:** Get notified about upcoming tasks and deadlines.
-- **Synchronization:** Sync your tasks across multiple devices.
+- **Notifications:** Get notified when your next water intake reminder is..
 
 ## Installation
 
@@ -28,5 +26,17 @@ An app for reminding user to intake water in specific time. Built with Flutter G
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/username/AwesomeApp.git
-   cd AwesomeApp
+   git clone https://github.com/vintrickal/water-reminder-app.git
+   cd water-reminder-app
+
+2. Install dependencies:
+   ```sh
+   flutter pub get
+
+3. Run the app:
+   ```sh
+   flutter run
+
+## Screenshots
+
+
